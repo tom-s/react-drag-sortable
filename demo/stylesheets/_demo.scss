@@ -1,0 +1,55 @@
+.placeholder {
+	color: white;
+	opacity: 0.3;
+	background-color: red;
+	width: 100%;
+	height: 100%;
+}
+
+.placeholder2 {
+	color: white;
+	background-color: red;
+	width: 100%;
+	height: 100%;
+}
+
+.draggable {
+	margin: 10px;
+}
+
+#example1 {
+	
+	.test {
+		width: 500px;
+		background-color: yellow;
+		height: 50px;
+	  	
+	  	&.bigger {
+			height: 100px;
+			width: 1000px;
+		}
+	 }
+}
+
+#example2 {
+
+	.test {
+		height: 50px;
+	  	background-color: yellow;
+		width: 100px;
+
+		&.bigger {
+			width: 200px;
+			height: 100px;
+		}
+	}
+}
+
+
+.dragged {
+	opacity: 0.7;
+
+	.test {
+		border: 1px solid red;
+	}
+}
