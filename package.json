@@ -1,6 +1,6 @@
 {
   "name": "react-drag-sortable",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "React drag & drop sortable list component",
   "main": "src/dragSortableList.jsx",
   "scripts": {

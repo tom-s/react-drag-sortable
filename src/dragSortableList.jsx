@@ -180,7 +180,7 @@ class DragSortableList extends React.Component {
         draggedEl.style.position = null;
         draggedEl.style.top = null;
         draggedEl.style.left = null;
-        draggedEl.style.webkitTransform = dragged.style.transform = dragged.style.msTransform = null;
+        draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = null;
         draggedEl.setAttribute('data-x', 0);
         draggedEl.setAttribute('data-y', 0);
 
