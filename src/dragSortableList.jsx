@@ -53,12 +53,12 @@ class DragSortableList extends React.Component {
     }
 
     render() {
-        var listItems = _.clone(this.state.items);
+        var listItems = _.clone(this.state.items, true);
         var draggedItem = null;
 
          // Add drag target
         if(this.state.placeholder) {
-            // Store dragged item
+            // Save dragged item
             _.forEach(listItems, (item) => {
                 if(this.state.dragging && item.id === this.state.dragging.id) {
                     draggedItem = item; // store it for display
@@ -152,6 +152,7 @@ class DragSortableList extends React.Component {
             draggedEl.style.position = 'absolute';
             draggedEl.style.top = state.dragging.position.top + 'px';
             draggedEl.style.left = state.dragging.position.left + 'px';
+            draggedEl.style.WebkitTransition = draggedEl.style.transition = null; // no transition
             draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
         } else {
             // Dragging has just started, store original position
@@ -173,9 +174,17 @@ class DragSortableList extends React.Component {
 
     _dragEnd(event) {
         var items = this._moveItem();
+        var draggedEl = this.refs[this.ref + 'dragged'];
+
+        // Add transition if rank hasn't changed
+        var draggedBefore = _.find(this.state.items, {id: this.state.dragging.id});
+        var draggedAfter = _.find(items, {id: this.state.dragging.id});
+
+        if(draggedBefore.rank === draggedAfter.rank && this.props.dropBackTransitionDuration) {
+          draggedEl.style.WebkitTransition = draggedEl.style.transition = 'all ' + this.props.dropBackTransitionDuration + 's'; // no transition
+        }
 
         // Reset style
-        var draggedEl = this.refs[this.ref + 'dragged'];
         draggedEl.style.display = null;
         draggedEl.style.position = null;
         draggedEl.style.top = null;
@@ -197,7 +206,7 @@ class DragSortableList extends React.Component {
     }
 
     _moveItem() {
-        var items = _.clone(this.state.items);
+        var items = _.clone(this.state.items, true);
 
         // Replace dragged item rank
         var dragged = _.find(items, {id: this.state.dragging.id});
@@ -261,11 +270,13 @@ class DragSortableList extends React.Component {
 // Props
 DragSortableList.propTypes = {
     items: React.PropTypes.array,
-    type: React.PropTypes.string
+    type: React.PropTypes.string,
+    dropBackTransitionDuration: React.PropTypes.number
 };
 DragSortableList.defaultProps = {
     items: [],
-    type: 'vertical' //horizontal
+    type: 'vertical', //horizontal
+    dropBackTransitionDuration: null
 };
 
 export default DragSortableList;

@@ -16,21 +16,20 @@ var placeholder2 = (
 
 
 var list = [
- 	{content: (<div className="test bigger">test1</div>)}, 
- 	{content: (<div className="test">test2</div>)}, 
- 	{content: (<div className="test bigger">test3</div>)}, 
+ 	{content: (<div className="test bigger">test1</div>)},
+ 	{content: (<div className="test">test2</div>)},
+ 	{content: (<div className="test bigger">test3</div>)},
  	{content: (<div className="test">test4</div>)}];
 
 var listHorizontal = [
- 	{content: (<div className="test">test1</div>)}, 
- 	{content: (<div className="test">test2</div>)}, 
- 	{content: (<div className="test bigger">test3</div>)}, 
+ 	{content: (<div className="test">test1</div>)},
+ 	{content: (<div className="test">test2</div>)},
+ 	{content: (<div className="test bigger">test3</div>)},
  	{content: (<div className="test">test4</div>)}];
 
  var onSort = function(sortedList) {
  	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>, document.getElementById('example1'));
 ReactDOM.render(<DragSortableList items={listHorizontal} placeholder={placeholder2} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
-
