@@ -5,13 +5,14 @@
 }
 
 #example1 {
+	/* Use my custom .test class for styling */
 	.test {
 		width: 50%;
 		background-color: yellow;
 		height: 50px;
 
 	  	&.bigger {
-				width: 100%;
+				width: 75%;
 				height: 100px;
 			}
 
@@ -26,7 +27,7 @@
 }
 
 #example2 {
-
+	/* Use the default .draggable class for styling */
 	.draggable {
 		height: 50px;
 	  background-color: yellow;
@@ -38,7 +39,7 @@
 		}
 
 		&.placeholder {
-			opacity: 0.7;
+			opacity: 0.5;
 			color: white;
 			background-color: red;
 			text-align: center;

@@ -9,9 +9,10 @@ npm install react-drag-sortable
 
 ## Description
 
-Make a list of elements (array) sortable by drag and drop. While dragging, a customizable placeholder is displayed on the drop area.
+Make a list of elements (array) sortable by drag and drop. Allows to specify a customizable placeholder to be displayed on the drop area.
+Allows to customize the style of items at every step (normal, being dragged, placeholder).
 The component supports both horizontal and vertical lists. The component uses interact.js for crossbrowser dragging (see [http://interactjs.io](http://interactjs.io/) for more details).
-The specificity of this component is that it will automatically adapt to your items width and height (no 100% width placeholders anymore).
+Works with items of variables width (in %)  as well as static width.
 
 SUPPORTS IOS AND TOUCH GESTURES (tested on ipad and safari)
 
@@ -48,7 +49,7 @@ You can pass the following properties:
 - placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:
 ```bash
 var placeholder = (
-    <div className="placeholder">PLACEHOLDER</div>
+    <div className="placeholderContent">PLACEHOLDER</div>
 );
 ```
 - callback function called on drop (when list is sorted). Takes the new sorted list as argument. For instance:
