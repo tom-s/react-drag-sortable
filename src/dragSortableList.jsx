@@ -104,7 +104,7 @@ class DragSortableList extends React.Component {
         var key = 'item-' + item.id;
         var style = {
             position: 'relative',
-            float: (this.props.type === 'horizontal') ? 'left' : 'none'
+            float: (this.props.type === 'horizontal' || this.props.type === 'grid') ? 'left' : 'none'
         };
         var classNames = 'draggable';
         classNames += (item.classes) ? ' ' + item.classes.join(' ') : '';
@@ -242,36 +242,53 @@ class DragSortableList extends React.Component {
 
         // Find placeholder
         var placeholder = null;
-
         _.forEach(children, (child) => {
-            var position = child.getBoundingClientRect();
-            var childX = (position.left + child.offsetWidth / 2);
-            var childY = (position.top + child.offsetHeight / 2)
-            var distanceX = Math.abs(mouseX - childX);
-            var distanceY = Math.abs(mouseY - childY);
-            var distance = (this.props.type === 'vertical') ? distanceY : distanceX;
-
-            if(!placeholder || distance < placeholder.distance) {
-                var difference = (this.props.type === 'vertical') ?  (mouseY - childY) : (mouseX - childX);
-                var position = (difference > 0) ? 'after' : 'before';
-                var rank = parseInt(child.getAttribute('data-rank'), 10);
-                rank += (position === 'before') ? -0.5 : 0.5;
-
-                placeholder = {
-                    rank: rank,
-                    distance: distance
-                };
-            }
+            placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder);
         });
 
         // Update state if necessary
         if(placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
+          console.log("update placeholder", placeholder);
           this.setState({
               placeholder: placeholder
           });
         }
     }
+
+    _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
+      mouseY = mouseY - window.scrollY; // make up for bounding rect not considering scrollY
+      var position = child.getBoundingClientRect();
+      var childX = (position.left + child.offsetWidth / 2);
+      var childY = (position.top + child.offsetHeight / 2)
+      var distanceX = Math.abs(mouseX - childX);
+      var distanceY = Math.abs(mouseY - childY);
+
+      if(this.props.type === 'grid') {
+        var distance = distanceX + distanceY;
+        var difference = mouseX - childX;
+      } else {
+        var distance = (this.props.type === 'vertical') ? distanceY : distanceX;
+        var difference = (this.props.type === 'vertical') ?  (mouseY - childY) : (mouseX - childX);
+      }
+
+      if(!placeholder || distance < placeholder.distance) {
+          console.log("distanceX", distanceX, "with", parseInt(child.getAttribute('data-rank'), 10));
+          console.log("distance", distance, "with", parseInt(child.getAttribute('data-rank'), 10));
+          var position = (difference > 0) ? 'after' : 'before';
+          var rank = parseInt(child.getAttribute('data-rank'), 10);
+          rank += (position === 'before') ? -0.5 : 0.5;
+
+          placeholder = {
+              rank: rank,
+              distance: distance
+          };
+      }
+
+      return placeholder;
+    }
 };
+
+
 
 // Props
 DragSortableList.propTypes = {
