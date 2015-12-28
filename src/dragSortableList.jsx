@@ -37,18 +37,6 @@ class DragSortableList extends React.Component {
         });
         this.setState({
             items: props.items
-        }, () => {
-            // Force list items to fit their content
-            _.forEach(this.state.items, (item) => {
-                var node = this.refs['item-' + item.id];
-                if(node) {
-                    var child = node.children[0];
-                    if(child) {
-                        node.style.width = child.offsetWidth + 'px';
-                        node.style.height = child.offsetHeight + 'px';
-                    }
-                }
-            });
         });
     }
 
@@ -104,26 +92,30 @@ class DragSortableList extends React.Component {
             position: 'relative',
             float: (this.props.type === 'horizontal') ? 'left' : 'none'
         };
+        var classNames = 'draggable';
+        classNames += (item.classes) ? ' ' + item.classes.join(' ') : '';
 
         if(type === 'normal') {
             return (
-                <div style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className="draggable">{item.content}</div>
+                <div style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
             );
         }
 
         if(type === 'dragged') {
           style['display'] = 'none'; // to avoid flicker effect when translate happens
           style['zIndex'] = 10; // make sur it is on top
+          classNames += ' dragged';
           return (
-                <div ref={this.ref + 'dragged'} data-id={item.id} key={key} className="draggable dragged" style={style}>{item.content}</div>
+                <div ref={this.ref + 'dragged'} data-id={item.id} key={key} className={classNames} style={style}>{item.content}</div>
             );
         }
 
         if(type === 'placeholder') {
             style.width = this.state.dragging.width; // set with and height
             style.height = this.state.dragging.height;
+            classNames += ' placeholder';
             return (
-                <div key={'placeholder'} className={'draggable placeholder'} style={style}>
+                <div key={'placeholder'} className={classNames} style={style}>
                     {placeholder}
                 </div>
             );

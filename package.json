@@ -1,7 +1,7 @@
 {
   "name": "react-drag-sortable",
-  "version": "0.1.6",
-  "description": "React drag & drop sortable list component",
+  "version": "0.2.0",
+  "description": "React drag & drop highly customizable sortable list component",
   "main": "src/dragSortableList.jsx",
   "scripts": {
     "dev": "webpack-dev-server --devtool eval --progress --colors --content-base demo/build",
@@ -16,7 +16,8 @@
     "js",
     "interact",
     "drag",
-    "sort"
+    "sort",
+    "list"
   ],
   "author": "tom-s",
   "license": "ISC",

@@ -7,29 +7,26 @@ import ReactDOM from 'react-dom'
 import DragSortableList from '../src/dragSortableList.jsx'
 
 var placeholder = (
-	<div className="placeholder">CUSTOM PLACEHOLDER</div>
+	<div className="placeholderContent"> CUSTOM CONTENT! </div>
 );
-
-var placeholder2 = (
-	<div className="placeholder2">another custom placeholder</div>
-);
-
 
 var list = [
- 	{content: (<div className="test bigger">test1</div>)},
- 	{content: (<div className="test">test2</div>)},
- 	{content: (<div className="test bigger">test3</div>)},
- 	{content: (<div className="test">test4</div>)}];
+ 	{content: (<span>test1</span>), classes:['test', 'bigger']},
+ 	{content: (<span>test2</span>), classes:['test']},
+ 	{content: (<span>test3</span>), classes:['test']},
+ 	{content: (<span>test4</span>), classes:['test', 'bigger']}
+];
 
 var listHorizontal = [
- 	{content: (<div className="test">test1</div>)},
- 	{content: (<div className="test">test2</div>)},
- 	{content: (<div className="test bigger">test3</div>)},
- 	{content: (<div className="test">test4</div>)}];
+ 	{content: (<div>test1</div>), classes:['bigger']},
+ 	{content: (<div>test2</div>)},
+ 	{content: (<div>test3</div>), classes:['bigger']},
+ 	{content: (<div>test4</div>)}
+];
 
  var onSort = function(sortedList) {
  	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>, document.getElementById('example1'));
-ReactDOM.render(<DragSortableList items={listHorizontal} placeholder={placeholder2} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
+ReactDOM.render(<DragSortableList className="test1" items={list} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList className="test2" items={listHorizontal} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
