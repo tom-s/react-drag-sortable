@@ -28,5 +28,5 @@ var listHorizontal = [
  	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList className="test1" items={list} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>, document.getElementById('example1'));
-ReactDOM.render(<DragSortableList className="test2" items={listHorizontal} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
+ReactDOM.render(<DragSortableList className="test1" items={list} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList className="test2" items={listHorizontal} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
