@@ -34,13 +34,14 @@ Use the component :
 ```
 
 You can pass the following properties:
-- items: array of items to order. Each item must be an object with a content property. For instance :
+- items: array of items to sort. Each item must be an object with a content property. You can optionally pass an array of classes that will be added to the item. For instance :
 ```bash
  var list = [
-    {content: (<div className="test">test1</div>)},
-    {content: (<div className="test">test2</div>)},
-    {content: (<div className="test">test3</div>)},
-    {content: (<div className="test">test4</div>)}];
+    {content: (<div>test1</div>), classes:['bigger']},
+    {content: (<div>test2</div>)},
+    {content: (<div>test3</div>), classes:['bigger']},
+    {content: (<div>test4</div>)}
+];
 ```
 - type: 'vertical' or 'horizontal'
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
@@ -62,7 +63,7 @@ ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort=
 
 ## Style
 
-The list elements' containers have a class .draggable
+The list elements all have a class .draggable
 The element being dragged has a class .dragged while it's being dragged
 The placeholder has a class .placeholder
 
@@ -82,10 +83,10 @@ For instance, you can customize the style :
   opacity: 0.5;
 }
 ```
-
+You can mix your custom classes ("classes" property in items list) with these classes for powerful styling.
 You will find more complex examples of styling in the example folder.
 
-## Example
+## Full example
 
 ```bash
 require('./stylesheets/styles.scss');
@@ -94,23 +95,32 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Components
-import DragSortableList from 'react-sortable-list'
+import DragSortableList from '../src/dragSortableList.jsx'
 
 var placeholder = (
-    <div className="placeholder">PLACEHOLDER</div>
+	<div className="placeholderContent"> CUSTOM CONTENT! </div>
 );
 
- var list = [
-    {content: (<div className="test bigger">test1</div>)},
-    {content: (<div className="test">test2</div>)},
-    {content: (<div className="test bigger">test3</div>)},
-    {content: (<div className="test">test4</div>)}];
+var list = [
+ 	{content: (<span>test1</span>), classes:['test', 'bigger']},
+ 	{content: (<span>test2</span>), classes:['test']},
+ 	{content: (<span>test3</span>), classes:['test']},
+ 	{content: (<span>test4</span>), classes:['test', 'bigger']}
+];
 
- var onSort = function(newOrder) {
-    console.log("new order", newOrder);
+var listHorizontal = [
+ 	{content: (<div>test1</div>), classes:['bigger']},
+ 	{content: (<div>test2</div>)},
+ 	{content: (<div>test3</div>), classes:['bigger']},
+ 	{content: (<div>test4</div>)}
+];
+
+ var onSort = function(sortedList) {
+ 	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort={onSort} type="vertical"/>, document.getElementById('main'));
+ReactDOM.render(<DragSortableList className="test1" items={list} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList className="test2" items={listHorizontal} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
 ```
 
 The example (containing both vertical and horizontal lists along with more complex styling) can be found in the demo folder and run using webpack with
