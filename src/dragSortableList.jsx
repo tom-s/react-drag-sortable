@@ -6,6 +6,20 @@ import _ from 'lodash'
 
 var findDOMNode = ReactDom.findDOMNode;
 
+var getStyle = function (e, styleName) {
+    var styleValue = "";
+    if(document.defaultView && document.defaultView.getComputedStyle) {
+        styleValue = document.defaultView.getComputedStyle(e, "").getPropertyValue(styleName);
+    }
+    else if(e.currentStyle) {
+        styleName = styleName.replace(/\-(\w)/g, function (strMatch, p1) {
+            return p1.toUpperCase();
+        });
+        styleValue = e.currentStyle[styleName];
+    }
+    return styleValue;
+}
+
 class DragSortableList extends React.Component {
     constructor(props) {
         super(props);
@@ -142,14 +156,14 @@ class DragSortableList extends React.Component {
             // Translate dragged item
             draggedEl.style.display = 'block';
             draggedEl.style.position = 'absolute';
-            draggedEl.style.top = state.dragging.position.top + 'px';
-            draggedEl.style.left = state.dragging.position.left + 'px';
+            draggedEl.style.top = state.dragging.top + 'px';
+            draggedEl.style.left = state.dragging.left + 'px';
             draggedEl.style.WebkitTransition = draggedEl.style.transition = null; // no transition
             draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
         } else {
             // Dragging has just started, store original position
-            var position = target.getBoundingClientRect();
-            state.dragging.position = position;
+            state.dragging.top = target.offsetTop - parseInt(getStyle(target, 'margin-top'), 10);
+            state.dragging.left = target.offsetLeft - parseInt(getStyle(target, 'margin-left'), 10);
             state.dragging.width = target.offsetWidth;
             state.dragging.height = target.offsetHeight;
         }

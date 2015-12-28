@@ -3,6 +3,11 @@
 .draggable {
 	margin: 10px;
 }
+.clearfix:after {
+	content: "";
+  display: table;
+  clear: both;
+}
 
 #example1 {
 	/* Use my custom .test class for styling */
@@ -43,6 +48,24 @@
 			color: white;
 			background-color: red;
 			text-align: center;
+		}
+	}
+}
+
+#example3 {
+	/* Use the default .draggable class for styling */
+	.draggable {
+		float: left;
+		width: 25%;
+		height: 150px;
+		background-color: yellow;
+
+		&.dragged {
+			border: 1px solid red;
+		}
+
+		&.placeholder {
+			opacity: 0.5;
 		}
 	}
 }
