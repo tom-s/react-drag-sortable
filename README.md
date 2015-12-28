@@ -44,7 +44,7 @@ You can pass the following properties:
     {content: (<div>test4</div>)}
 ];
 ```
-- type: 'vertical' or 'horizontal'
+- type: 'vertical', 'horizontal' or 'grid'
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
 - placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:
 ```bash

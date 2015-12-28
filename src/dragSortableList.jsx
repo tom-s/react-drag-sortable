@@ -247,8 +247,7 @@ class DragSortableList extends React.Component {
         });
 
         // Update state if necessary
-        if(placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
-          console.log("update placeholder", placeholder);
+        if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
           this.setState({
               placeholder: placeholder
           });
@@ -260,20 +259,23 @@ class DragSortableList extends React.Component {
       var position = child.getBoundingClientRect();
       var childX = (position.left + child.offsetWidth / 2);
       var childY = (position.top + child.offsetHeight / 2)
-      var distanceX = Math.abs(mouseX - childX);
-      var distanceY = Math.abs(mouseY - childY);
+      var distanceX = mouseX - childX;
+      var distanceY = mouseY - childY;
 
       if(this.props.type === 'grid') {
-        var distance = distanceX + distanceY;
-        var difference = mouseX - childX;
+        // Skip if not on the same line
+        if(mouseY < position.top || mouseY > (position.top + child.offsetHeight)) {
+          return placeholder;
+        }
+        var distance = Math.abs(distanceX);
+        var difference = distanceX;
+        var rank =  parseInt(child.getAttribute('data-rank'), 10);
       } else {
-        var distance = (this.props.type === 'vertical') ? distanceY : distanceX;
-        var difference = (this.props.type === 'vertical') ?  (mouseY - childY) : (mouseX - childX);
+        var distance = (this.props.type === 'vertical') ? Math.abs(distanceY) : Math.abs(distanceX);
+        var difference = (this.props.type === 'vertical') ?  distanceY : distanceX;
       }
 
       if(!placeholder || distance < placeholder.distance) {
-          console.log("distanceX", distanceX, "with", parseInt(child.getAttribute('data-rank'), 10));
-          console.log("distance", distance, "with", parseInt(child.getAttribute('data-rank'), 10));
           var position = (difference > 0) ? 'after' : 'before';
           var rank = parseInt(child.getAttribute('data-rank'), 10);
           rank += (position === 'before') ? -0.5 : 0.5;
