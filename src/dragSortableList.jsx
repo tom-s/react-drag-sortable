@@ -158,7 +158,7 @@ class DragSortableList extends React.Component {
             draggedEl.style.position = 'absolute';
             draggedEl.style.top = state.dragging.top + 'px';
             draggedEl.style.left = state.dragging.left + 'px';
-            draggedEl.style.WebkitTransition = draggedEl.style.transition = null; // no transition
+            draggedEl.style.WebkitTransition = draggedEl.style.transition = 'none'; // no transition
             draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
         } else {
             // Dragging has just started, store original position
@@ -191,11 +191,12 @@ class DragSortableList extends React.Component {
         }
 
         // Reset style
-        draggedEl.style.display = null;
-        draggedEl.style.position = null;
+        console.log("drag end");
+        draggedEl.style.display =  null;
+        draggedEl.style.position = 'static';
         draggedEl.style.top = null;
         draggedEl.style.left = null;
-        draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = null;
+        draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'none';
         draggedEl.setAttribute('data-x', 0);
         draggedEl.setAttribute('data-y', 0);
 
