@@ -191,7 +191,6 @@ class DragSortableList extends React.Component {
         }
 
         // Reset style
-        console.log("drag end");
         draggedEl.style.display =  null;
         draggedEl.style.position = 'static';
         draggedEl.style.top = null;
@@ -256,7 +255,8 @@ class DragSortableList extends React.Component {
     }
 
     _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
-      mouseY = mouseY - window.scrollY; // make up for bounding rect not considering scrollY
+      var scrollY =   window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      mouseY = mouseY - scrollY; // make up for bounding rect not considering scrollY
       var position = child.getBoundingClientRect();
       var childX = (position.left + child.offsetWidth / 2);
       var childY = (position.top + child.offsetHeight / 2)
