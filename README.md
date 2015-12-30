@@ -154,5 +154,5 @@ I am a full-stack Javascript developer based in Lyon, France.
 
 ## License
 
-react-sortable-list is dual licensed under the MIT license and GPL.
+react-drag-sortable is dual licensed under the MIT license and GPL.
 For more information click [here](https://opensource.org/licenses/MIT).
