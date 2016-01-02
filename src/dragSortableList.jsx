@@ -250,6 +250,8 @@ class DragSortableList extends React.Component {
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
           this.setState({
               placeholder: placeholder
+          }, () => {
+            console.log("placeholder has changed !", placeholder);
           });
         }
     }

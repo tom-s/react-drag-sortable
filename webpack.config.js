@@ -20,7 +20,7 @@ var config = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader?stage=1&optional=runtime'
+                loaders: ["react-hot", "babel-loader"]
             },
             {
                 test: /\.scss$/,

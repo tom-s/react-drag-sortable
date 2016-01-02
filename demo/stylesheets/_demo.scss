@@ -2,11 +2,12 @@
 /* For both examples */
 .draggable {
 	margin: 10px;
+	transition: all 1s ease-in;
 }
 .clearfix:after {
 	content: "";
-  display: table;
-  clear: both;
+  	display: table;
+  	clear: both;
 }
 
 #example1 {
