@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import DragSortableList from '../src/dragSortableList.jsx'
 
 var placeholder = (
-	<div className="placeholderContent"> CUSTOM CONTENT! </div>
+	<div className="placeholderContent"> DROP HERE ! </div>
 );
 
 var list = [

@@ -32,11 +32,12 @@ class DragSortableList extends React.Component {
     }
 
     componentDidMount() {
+        /*
         var draggableChildrenSelector = '#' + this.ref + '> .draggable';
         interact(draggableChildrenSelector).draggable({
             onmove: _.bind(this._dragMove, this),
             onend: _.bind(this._dragEnd, this)
-        });
+        });*/
         this._initItems(this.props);
     }
 
@@ -45,7 +46,7 @@ class DragSortableList extends React.Component {
     }
 
     _initItems(props) {
-        var items = _.map(props.items, function(item, i) {
+        var items = _.map(props.items, (item, i) => {
             item.rank = i;
             item.id = (item.id) ? item.id : _.uniqueId();
         });
@@ -111,7 +112,7 @@ class DragSortableList extends React.Component {
 
         if(type === 'normal') {
             return (
-                <div style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
+                <div draggable="true" onstyle={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
             );
         }
 
@@ -129,7 +130,7 @@ class DragSortableList extends React.Component {
             style.height = this.state.dragging.height;
             classNames += ' placeholder';
             return (
-                <div key={'placeholder'} className={classNames} style={style}>
+                <div draggable="true"ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
                     {placeholder}
                 </div>
             );
@@ -218,7 +219,7 @@ class DragSortableList extends React.Component {
         var dragged = _.find(items, {id: this.state.dragging.id});
         dragged.rank = this.state.placeholder.rank;
 
-        items = _.sortBy(items, function(item) {
+        items = _.sortBy(items, (item) => {
             return item.rank;
         });
 
@@ -248,12 +249,44 @@ class DragSortableList extends React.Component {
 
         // Update state if necessary
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
-          this.setState({
-              placeholder: placeholder
-          }, () => {
-            console.log("placeholder has changed !", placeholder);
-          });
+            this._animatePlaceholder(() => {
+                this.setState({
+                    placeholder: placeholder
+                });
+            })
+            
         }
+    }
+
+   _animatePlaceholder (cb) {
+        //var currentRect = target.getBoundingClientRect();
+        console.log("this.state.dragging", this.state.dragging);
+
+        var placeholderEl = this.ref[this.ref + 'placeholder'];
+        if(placeholderEl) {
+            console.log("hourra");
+        }
+
+
+        /*
+         _css(target, 'transition', 'none');
+                _css(target, 'transform', 'translate3d('
+                    + (prevRect.left - currentRect.left) + 'px,'
+                    + (prevRect.top - currentRect.top) + 'px,0)'
+                );
+
+                target.offsetWidth; // repaint
+
+                _css(target, 'transition', 'all ' + ms + 'ms');
+                _css(target, 'transform', 'translate3d(0,0,0)');
+
+                clearTimeout(target.animated);
+                target.animated = setTimeout(function () {
+                    _css(target, 'transition', '');
+                    _css(target, 'transform', '');
+                    target.animated = false;
+                }, ms);  */     
+        if(cb && _.isFunction(cb)) cb();
     }
 
     _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
