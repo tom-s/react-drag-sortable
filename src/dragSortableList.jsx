@@ -93,7 +93,7 @@ class DragSortableList extends React.Component {
 
         return (
             <div>
-                <div id={this.ref} className="List" ref={this.ref}>
+                <div id={this.ref} className="List" ref={this.ref}  onDragOver={_.bind(this._dragMove, this)}>
                     {listItems}
                 </div>
             </div>
@@ -104,7 +104,6 @@ class DragSortableList extends React.Component {
         var placeholder = (this.props.placeholder) ? this.props.placeholder : item.content;
         var key = 'item-' + item.id;
         var style = {
-            position: 'relative',
             float: (this.props.type === 'horizontal' || this.props.type === 'grid') ? 'left' : 'none'
         };
         var classNames = 'draggable';
@@ -112,16 +111,19 @@ class DragSortableList extends React.Component {
 
         if(type === 'normal') {
             return (
-                <div draggable="true" onstyle={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
+                <div draggable="true"  onDragStart={_.bind(this._dragStart, this)} onDragEnd={_.bind(this._dragEnd, this)} style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
             );
         }
 
+
         if(type === 'dragged') {
-          style['display'] = 'none'; // to avoid flicker effect when translate happens
-          style['zIndex'] = 10; // make sur it is on top
-          classNames += ' dragged';
+          //style['position'] = 'absolute'; // to avoid flicker effect when translate happens
+          //style['top'] = '-99999px';
+          //style['left'] = '-99999px';
+          //style['zIndex'] = 10; // make sur it is on top
+          //classNames += ' dragged';
           return (
-                <div ref={this.ref + 'dragged'} data-id={item.id} key={key} className={classNames} style={style}>{item.content}</div>
+                <div draggable="true" ref={key} data-id={item.id} key={key} className={classNames} style={style}>{item.content}</div>
             );
         }
 
@@ -130,53 +132,75 @@ class DragSortableList extends React.Component {
             style.height = this.state.dragging.height;
             classNames += ' placeholder';
             return (
-                <div draggable="true"ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
+                <div ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
                     {placeholder}
                 </div>
             );
         }
     }
 
+    _dragStart(event) {
+        var target = event.target;
+        
+        var dragId =  target.getAttribute('data-id');
+
+        // Dragging has just started, store original position
+        var dragData = {
+            id: dragId,
+            top: target.offsetTop - parseInt(getStyle(target, 'margin-top'), 10),
+            left: target.offsetLeft - parseInt(getStyle(target, 'margin-left'), 10),
+            width: target.offsetWidth,
+            height: target.offsetHeight
+        };
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+        var draggedCloneEl = target.appendChild(target.cloneNode(true));
+        draggedCloneEl.setAttribute('data-reactid', null);
+        draggedCloneEl.style.position = 'absolute';
+        draggedCloneEl.style.top = '-9999px';
+        draggedCloneEl.style.left = '-9999px';
+        this.refs[this.ref].appendChild(draggedCloneEl);
+        draggedCloneEl.className = draggedCloneEl.className + " dragged";
+        event.dataTransfer.setDragImage(draggedCloneEl, event.clientX - dragData.left, event.clientY - dragData.top);
+
+        this._movePlaceholder(event);
+
+        this.setState({
+            dragging: { id: dragId }
+        })
+    }
+
     _dragMove(event) {
         var target = event.target;
+        event.preventDefault();
+        console.log("drag move");
 
+        /*
         // Move copy of dragged element and keep the dragged position in the data-x/data-y attributes
-        var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
+        console.log(this.state.dragging.top, ' - ', event.clientX);
+        var x = event.clientX - this.state.dragging.top;
+        var y = event.clientY - this.state.dragging.left;
+        console.log("event", event.clientX);
+        this._draggedX = x;
+        this._draggedY = y;
 
-        // prepare future state
+        // Translate dragged item*/
         var state = _.clone(this.state, true);
-        var dragId =  target.getAttribute('data-id');
-        state.dragging = (state.dragging) ? state.dragging : { id: dragId };
         var draggedEl = this.refs[this.ref + 'dragged'];
-
-        // If dragging has already been started
-        if(draggedEl && state.dragging) {
-            // Translate dragged item
+        
+        if(draggedEl) {
+            /*
+            console.log("dragge el", draggedEl);
             draggedEl.style.display = 'block';
             draggedEl.style.position = 'absolute';
-            draggedEl.style.top = state.dragging.top + 'px';
-            draggedEl.style.left = state.dragging.left + 'px';
+            draggedEl.style.top = this.state.dragging.top + 'px';
+            draggedEl.style.left = this.state.dragging.left + 'px';
             draggedEl.style.WebkitTransition = draggedEl.style.transition = 'none'; // no transition
-            draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
-        } else {
-            // Dragging has just started, store original position
-            state.dragging.top = target.offsetTop - parseInt(getStyle(target, 'margin-top'), 10);
-            state.dragging.left = target.offsetLeft - parseInt(getStyle(target, 'margin-left'), 10);
-            state.dragging.width = target.offsetWidth;
-            state.dragging.height = target.offsetHeight;
-        }
-
-        // Update state if necessary and move placeholder
-        if(!this.state.dragging) {
-          this.setState(state, () => {
-              this._movePlaceholder(event);
-          });
-        } else {
+            draggedEl.style.webkitTransform = draggedEl.style.transform = draggedEl.style.msTransform = 'translate(' + this._draggedX + 'px, ' + this._draggedY + 'px)';
+            */
+            // Move placeholder
             this._movePlaceholder(event);
         }
+        
     }
 
     _dragEnd(event) {
@@ -243,24 +267,25 @@ class DragSortableList extends React.Component {
 
         // Find placeholder
         var placeholder = null;
+        var dragData =  JSON.parse(e.dataTransfer.getData("text/plain"));
+
         _.forEach(children, (child) => {
             placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder);
         });
 
         // Update state if necessary
+        console.log("placeholder", placeholder);
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
-            this._animatePlaceholder(() => {
-                this.setState({
-                    placeholder: placeholder
-                });
-            })
-            
+            console.log("set state of placeholder !");
+            this.setState({
+                placeholder: placeholder
+            });
+
         }
     }
 
    _animatePlaceholder (cb) {
         //var currentRect = target.getBoundingClientRect();
-        console.log("this.state.dragging", this.state.dragging);
 
         var placeholderEl = this.ref[this.ref + 'placeholder'];
         if(placeholderEl) {
