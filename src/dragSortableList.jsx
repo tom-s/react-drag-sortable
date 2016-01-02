@@ -56,6 +56,7 @@ class DragSortableList extends React.Component {
     }
 
     render() {
+        console.log("render");
         var listItems = _.clone(this.state.items, true);
         var draggedItem = null;
 
@@ -92,10 +93,8 @@ class DragSortableList extends React.Component {
         });
 
         return (
-            <div>
-                <div id={this.ref} className="List" ref={this.ref}  onDragOver={_.bind(this._dragMove, this)}>
-                    {listItems}
-                </div>
+            <div id={this.ref} className="List" ref={this.ref}  onDragOver={_.bind(this._dragMove, this)}>
+                {listItems}
             </div>
         );
     }
@@ -109,21 +108,12 @@ class DragSortableList extends React.Component {
         var classNames = 'draggable';
         classNames += (item.classes) ? ' ' + item.classes.join(' ') : '';
 
-        if(type === 'normal') {
+        if(type === 'normal' || type === 'dragged') {
+            if(type === 'dragged') {
+                //style['display'] = 'none';
+            }
             return (
                 <div draggable="true"  onDragStart={_.bind(this._dragStart, this)} onDragEnd={_.bind(this._dragEnd, this)} style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
-            );
-        }
-
-
-        if(type === 'dragged') {
-          //style['position'] = 'absolute'; // to avoid flicker effect when translate happens
-          //style['top'] = '-99999px';
-          //style['left'] = '-99999px';
-          //style['zIndex'] = 10; // make sur it is on top
-          //classNames += ' dragged';
-          return (
-                <div draggable="true" ref={key} data-id={item.id} key={key} className={classNames} style={style}>{item.content}</div>
             );
         }
 
@@ -140,6 +130,7 @@ class DragSortableList extends React.Component {
     }
 
     _dragStart(event) {
+        console.log("drag start");
         var target = event.target;
         
         var dragId =  target.getAttribute('data-id');
@@ -153,14 +144,15 @@ class DragSortableList extends React.Component {
             height: target.offsetHeight
         };
         event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
-        var draggedCloneEl = target.appendChild(target.cloneNode(true));
+        var draggedCloneEl = target.cloneNode(true);
         draggedCloneEl.setAttribute('data-reactid', null);
+        draggedCloneEl.style.display = 'block';
         draggedCloneEl.style.position = 'absolute';
         draggedCloneEl.style.top = '-9999px';
         draggedCloneEl.style.left = '-9999px';
-        this.refs[this.ref].appendChild(draggedCloneEl);
         draggedCloneEl.className = draggedCloneEl.className + " dragged";
-        event.dataTransfer.setDragImage(draggedCloneEl, event.clientX - dragData.left, event.clientY - dragData.top);
+        this.refs[this.ref].appendChild(draggedCloneEl);
+        event.dataTransfer.setDragImage(draggedCloneEl, 0, 0); //event.clientX - dragData.left, event.clientY - dragData.top);
 
         this._movePlaceholder(event);
 
@@ -170,22 +162,17 @@ class DragSortableList extends React.Component {
     }
 
     _dragMove(event) {
-        var target = event.target;
-        event.preventDefault();
         console.log("drag move");
 
-        /*
-        // Move copy of dragged element and keep the dragged position in the data-x/data-y attributes
-        console.log(this.state.dragging.top, ' - ', event.clientX);
-        var x = event.clientX - this.state.dragging.top;
-        var y = event.clientY - this.state.dragging.left;
-        console.log("event", event.clientX);
-        this._draggedX = x;
-        this._draggedY = y;
+        var target = event.target;
+        event.preventDefault();
 
-        // Translate dragged item*/
-        var state = _.clone(this.state, true);
-        var draggedEl = this.refs[this.ref + 'dragged'];
+        if(!this.state.dragging) {
+            return false;
+        }
+
+        // Translate dragged item
+        var draggedEl = this.refs['item-' + this.state.dragging.id];
         
         if(draggedEl) {
             /*
@@ -204,6 +191,8 @@ class DragSortableList extends React.Component {
     }
 
     _dragEnd(event) {
+        event.preventDefault();
+        console.log("drag end");
         var items = this._moveItem();
         var draggedEl = this.refs[this.ref + 'dragged'];
 
@@ -267,7 +256,6 @@ class DragSortableList extends React.Component {
 
         // Find placeholder
         var placeholder = null;
-        var dragData =  JSON.parse(e.dataTransfer.getData("text/plain"));
 
         _.forEach(children, (child) => {
             placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder);
