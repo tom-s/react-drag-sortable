@@ -109,7 +109,7 @@ class DragSortableList extends React.Component {
 
         if(type === 'normal') {
             return (
-                <div draggable="true" style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
+                <div style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
             );
         }
 
@@ -127,7 +127,7 @@ class DragSortableList extends React.Component {
             style.height = this.state.dragging.height;
             classNames += ' placeholder';
             return (
-                <div draggable="true" ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
+                <div ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
                     {placeholder}
                 </div>
             );
@@ -246,6 +246,7 @@ class DragSortableList extends React.Component {
 
         // Update state if necessary
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
+            console.log("placeholder", placeholder);
             this._animatePlaceholder(() => {
                 this.setState({
                     placeholder: placeholder
@@ -257,12 +258,23 @@ class DragSortableList extends React.Component {
 
    _animatePlaceholder (cb) {
         //var currentRect = target.getBoundingClientRect();
-        console.log("this.state.dragging", this.state.dragging);
-
-        var placeholderEl = this.ref[this.ref + 'placeholder'];
+        var placeholderEl = this.refs[this.ref + 'placeholder'];
+        console.log("placeholderEl", placeholderEl);
         if(placeholderEl) {
             console.log("hourra");
+            //placeholderEl.style.WebkitTransition = placeholderEl.style.transition = 'all 0.5s';
+            //placeholderEl.style.webkitTransform = placeholderEl.style.transform = placeholderEl.style.msTransform = 'translate(0, 100px)';
+
+
+            window.setTimeout(() => {
+                console.log("calback");
+                if(cb && _.isFunction(cb)) cb();
+            }, 500);
+        } else {
+             if(cb && _.isFunction(cb)) cb();
         }
+
+
 
 
         /*
@@ -283,7 +295,7 @@ class DragSortableList extends React.Component {
                     _css(target, 'transform', '');
                     target.animated = false;
                 }, ms);  */     
-        if(cb && _.isFunction(cb)) cb();
+        
     }
 
     _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
