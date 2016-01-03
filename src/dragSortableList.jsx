@@ -32,12 +32,11 @@ class DragSortableList extends React.Component {
     }
 
     componentDidMount() {
-        /*
         var draggableChildrenSelector = '#' + this.ref + '> .draggable';
         interact(draggableChildrenSelector).draggable({
             onmove: _.bind(this._dragMove, this),
             onend: _.bind(this._dragEnd, this)
-        });*/
+        });
         this._initItems(this.props);
     }
 
@@ -92,10 +91,8 @@ class DragSortableList extends React.Component {
         });
 
         return (
-            <div>
-                <div id={this.ref} className="List" ref={this.ref}>
-                    {listItems}
-                </div>
+            <div id={this.ref} className="List" ref={this.ref}>
+                {listItems}
             </div>
         );
     }
@@ -112,7 +109,7 @@ class DragSortableList extends React.Component {
 
         if(type === 'normal') {
             return (
-                <div draggable="true" onstyle={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
+                <div draggable="true" style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
             );
         }
 
@@ -130,7 +127,7 @@ class DragSortableList extends React.Component {
             style.height = this.state.dragging.height;
             classNames += ' placeholder';
             return (
-                <div draggable="true"ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
+                <div draggable="true" ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
                     {placeholder}
                 </div>
             );
