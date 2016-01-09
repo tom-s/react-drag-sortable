@@ -55,7 +55,17 @@ class DragSortableList extends React.Component {
                 top:  placeholderEl.offsetTop
             };
         }
-        console.log("position", _positions.placeholder);
+        // Store items positions
+        _.forEach(this.state.items, (item) => {
+            var el = this.refs[this.ref  + 'item-' + item.id];
+            if(el) {
+                _positions[item.id] = {
+                    left: el.offsetLeft,
+                    top:  el.offsetTop
+                };
+            }
+        });
+        console.log("position", _positions);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -64,7 +74,6 @@ class DragSortableList extends React.Component {
         if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
             var x = _positions.placeholder.left - placeholderEl.offsetLeft;
             var y = _positions.placeholder.top - placeholderEl.offsetTop;
-            console.log("translate of ", x, y);
             placeholderEl.style.WebkitTransition = placeholderEl.style.transition =  null;
             window.setTimeout(() => {
                 placeholderEl.style.WebkitTransition = placeholderEl.style.transition = 'all 0.1s';
@@ -73,6 +82,22 @@ class DragSortableList extends React.Component {
             window.setTimeout(() => {
                 placeholderEl.style.webkitTransform = placeholderEl.style.transform = null;
             }, 200);
+
+            _.forEach(this.state.items, (item) => {
+                var el = this.refs[this.ref  + 'item-' + item.id];
+                if(el) {
+                    var x = _positions[item.id].left - el.offsetLeft;
+                    var y = _positions[item.id].top - el.offsetTop;
+                    el.style.WebkitTransition = el.style.transition =  null;
+                    window.setTimeout(() => {
+                        el.style.WebkitTransition = el.style.transition = 'all 0.1s';
+                    }, 100);
+                    el.style.webkitTransform = el.style.transform = el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
+                    window.setTimeout(() => {
+                        el.style.webkitTransform = el.style.transform = null;
+                    }, 200);
+                }
+            });
         }
     }
 
@@ -141,7 +166,7 @@ class DragSortableList extends React.Component {
 
         if(type === 'normal') {
             return (
-                <div style={style} data-id={item.id} data-rank={item.rank} ref={key} key={key} className={classNames}>{item.content}</div>
+                <div ref={this.ref + key} style={style} data-id={item.id} data-rank={item.rank} key={key} className={classNames}>{item.content}</div>
             );
         }
 
