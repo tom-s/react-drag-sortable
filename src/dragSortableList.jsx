@@ -47,57 +47,52 @@ class DragSortableList extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        // Store placeholder position
-        var placeholderEl = this.refs[this.ref  + "placeholder"];
-        if(placeholderEl) {
-            _positions.placeholder = {
-                left: placeholderEl.offsetLeft,
-                top:  placeholderEl.offsetTop
-            };
+        // Store positions for animation
+        if(this.props.moveTransitionDuration) {
+            var itemsRefs = _.union(['placeholder'], _.map(this.state.items, (item) => 'item-' + item.id));
+            _.forEach(itemsRefs, (itemRef) => {
+                var el = this.refs[this.ref  + itemRef];
+                if(el) {
+                    _positions[itemRef] = {
+                        left: el.offsetLeft,
+                        top:  el.offsetTop
+                    };
+                }
+            });
         }
-        // Store items positions
-        _.forEach(this.state.items, (item) => {
-            var el = this.refs[this.ref  + 'item-' + item.id];
-            if(el) {
-                _positions[item.id] = {
-                    left: el.offsetLeft,
-                    top:  el.offsetTop
-                };
-            }
-        });
-        console.log("position", _positions);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        var placeholderEl = this.refs[this.ref  + "placeholder"];
+        if(this.props.moveTransitionDuration) {
+            var placeholderEl = this.refs[this.ref  + "placeholder"];
+            if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
+                var itemsRefs = _.union(['placeholder'], _.map(this.state.items, (item) => 'item-' + item.id));
+                var instructions = {
+                    transitions: [],
+                    transforms: []
+                };
+                _.forEach(itemsRefs, (itemRef) => {
+                    var el = this.refs[this.ref + itemRef];
+                    if(el) {
+                        var x = _positions[itemRef].left - el.offsetLeft;
+                        var y = _positions[itemRef].top - el.offsetTop;
+                        el.style.WebkitTransition = el.style.transition =  null;
+                        el.style.webkitTransform = el.style.transform = el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)'; // move back to former position
+                        instructions.transitions.push(function() {el.style.WebkitTransition = el.style.transition = 'all ' + this.props.moveTransitionDuration + 's';}.bind(this));
+                        instructions.transforms.push(function() {el.style.webkitTransform = el.style.transform = null;}.bind(this));
+                    }
+                });
 
-        if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
-            var x = _positions.placeholder.left - placeholderEl.offsetLeft;
-            var y = _positions.placeholder.top - placeholderEl.offsetTop;
-            placeholderEl.style.WebkitTransition = placeholderEl.style.transition =  null;
-            window.setTimeout(() => {
-                placeholderEl.style.WebkitTransition = placeholderEl.style.transition = 'all 0.1s';
-            }, 100);
-            placeholderEl.style.webkitTransform = placeholderEl.style.transform = placeholderEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
-            window.setTimeout(() => {
-                placeholderEl.style.webkitTransform = placeholderEl.style.transform = null;
-            }, 200);
-
-            _.forEach(this.state.items, (item) => {
-                var el = this.refs[this.ref  + 'item-' + item.id];
-                if(el) {
-                    var x = _positions[item.id].left - el.offsetLeft;
-                    var y = _positions[item.id].top - el.offsetTop;
-                    el.style.WebkitTransition = el.style.transition =  null;
-                    window.setTimeout(() => {
-                        el.style.WebkitTransition = el.style.transition = 'all 0.1s';
-                    }, 100);
-                    el.style.webkitTransform = el.style.transform = el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
-                    window.setTimeout(() => {
-                        el.style.webkitTransform = el.style.transform = null;
-                    }, 200);
-                }
-            });
+                // Add all transitions and remove transforms
+                 window.setTimeout(() => {
+                    _.forEach(instructions.transitions, (instruction) => {
+                        instruction();
+                    });
+                    _.forEach(instructions.transforms, (instruction) => {
+                        instruction();
+                    });   
+                }, 100); // give it some time to make sure css has been applied
+            }
         }
     }
 
@@ -303,53 +298,10 @@ class DragSortableList extends React.Component {
 
         // Update state if necessary
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
-            console.log("placeholder", placeholder);
             this.setState({
                 placeholder: placeholder
             });            
         }
-    }
-
-   _animatePlaceholder (cb) {
-        //var currentRect = target.getBoundingClientRect();
-        var placeholderEl = this.refs[this.ref + 'placeholder'];
-        console.log("placeholderEl", placeholderEl);
-        if(placeholderEl) {
-            console.log("hourra");
-            //placeholderEl.style.WebkitTransition = placeholderEl.style.transition = 'all 0.5s';
-            //placeholderEl.style.webkitTransform = placeholderEl.style.transform = placeholderEl.style.msTransform = 'translate(0, 100px)';
-
-
-            window.setTimeout(() => {
-                console.log("calback");
-                if(cb && _.isFunction(cb)) cb();
-            }, 500);
-        } else {
-             if(cb && _.isFunction(cb)) cb();
-        }
-
-
-
-
-        /*
-         _css(target, 'transition', 'none');
-                _css(target, 'transform', 'translate3d('
-                    + (prevRect.left - currentRect.left) + 'px,'
-                    + (prevRect.top - currentRect.top) + 'px,0)'
-                );
-
-                target.offsetWidth; // repaint
-
-                _css(target, 'transition', 'all ' + ms + 'ms');
-                _css(target, 'transform', 'translate3d(0,0,0)');
-
-                clearTimeout(target.animated);
-                target.animated = setTimeout(function () {
-                    _css(target, 'transition', '');
-                    _css(target, 'transform', '');
-                    target.animated = false;
-                }, ms);  */     
-        
     }
 
     _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
@@ -395,7 +347,8 @@ class DragSortableList extends React.Component {
 DragSortableList.propTypes = {
     items: React.PropTypes.array,
     type: React.PropTypes.string,
-    dropBackTransitionDuration: React.PropTypes.number
+    dropBackTransitionDuration: React.PropTypes.number,
+    moveTransitionDuration: React.PropTypes.number
 };
 DragSortableList.defaultProps = {
     items: [],

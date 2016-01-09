@@ -45,6 +45,7 @@ You can pass the following properties:
 ];
 ```
 - type: 'vertical', 'horizontal' or 'grid'
+- moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided. 
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
 - placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:
 ```bash
@@ -132,8 +133,8 @@ var listGrid = [
  	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList items={list} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
-ReactDOM.render(<DragSortableList items={listHorizontal} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
+ReactDOM.render(<DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList items={listHorizontal} moveTransitionDuration={0.3} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
 ReactDOM.render(<DragSortableList items={listGrid} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example3'));
 ```
 

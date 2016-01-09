@@ -40,6 +40,6 @@ var listGrid = [
  	console.log("sortedList", sortedList);
  }
 
-ReactDOM.render(<DragSortableList items={list} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
-ReactDOM.render(<DragSortableList items={listHorizontal} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
+ReactDOM.render(<DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} type="vertical"/>, document.getElementById('example1'));
+ReactDOM.render(<DragSortableList items={listHorizontal} moveTransitionDuration={0.3} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'));
 ReactDOM.render(<DragSortableList items={listGrid} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example3'));
