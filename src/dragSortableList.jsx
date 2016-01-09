@@ -20,6 +20,8 @@ var getStyle = function (e, styleName) {
     return styleValue;
 }
 
+var _positions = {};
+
 class DragSortableList extends React.Component {
     constructor(props) {
         super(props);
@@ -42,6 +44,36 @@ class DragSortableList extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this._initItems(newProps);
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        // Store placeholder position
+        var placeholderEl = this.refs[this.ref  + "placeholder"];
+        if(placeholderEl) {
+            _positions.placeholder = {
+                left: placeholderEl.offsetLeft,
+                top:  placeholderEl.offsetTop
+            };
+        }
+        console.log("position", _positions.placeholder);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        var placeholderEl = this.refs[this.ref  + "placeholder"];
+
+        if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
+            var x = _positions.placeholder.left - placeholderEl.offsetLeft;
+            var y = _positions.placeholder.top - placeholderEl.offsetTop;
+            console.log("translate of ", x, y);
+            placeholderEl.style.WebkitTransition = placeholderEl.style.transition =  null;
+            window.setTimeout(() => {
+                placeholderEl.style.WebkitTransition = placeholderEl.style.transition = 'all 0.1s';
+            }, 100);
+            placeholderEl.style.webkitTransform = placeholderEl.style.transform = placeholderEl.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
+            window.setTimeout(() => {
+                placeholderEl.style.webkitTransform = placeholderEl.style.transform = null;
+            }, 200);
+        }
     }
 
     _initItems(props) {
@@ -247,12 +279,9 @@ class DragSortableList extends React.Component {
         // Update state if necessary
         if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
             console.log("placeholder", placeholder);
-            this._animatePlaceholder(() => {
-                this.setState({
-                    placeholder: placeholder
-                });
-            })
-            
+            this.setState({
+                placeholder: placeholder
+            });            
         }
     }
 
