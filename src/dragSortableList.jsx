@@ -76,9 +76,8 @@ class DragSortableList extends React.Component {
                     if(el) {
                         var x = _positions[itemRef].left - el.offsetLeft;
                         var y = _positions[itemRef].top - el.offsetTop;
-                        el.style.WebkitTransition = el.style.transition =  null;
                         el.style.webkitTransform = el.style.transform = el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)'; // move back to former position
-                        instructions.transitions.push(function() {el.style.WebkitTransition = el.style.transition = 'all ' + this.props.moveTransitionDuration + 's';}.bind(this));
+                        instructions.transitions.push(function() {el.style.WebkitTransition = el.style.transition = 'transform ' + this.props.moveTransitionDuration + 's';}.bind(this));
                         instructions.transforms.push(function() {el.style.webkitTransform = el.style.transform = null;}.bind(this));
                     }
                 });
@@ -91,7 +90,7 @@ class DragSortableList extends React.Component {
                     _.forEach(instructions.transforms, (instruction) => {
                         instruction();
                     });   
-                }, 100); // give it some time to make sure css has been applied
+                }, 100); // give it some time to make sure transform has been applied
             }
         }
     }
