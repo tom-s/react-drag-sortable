@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>React-drag-sortable by tom-s</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">React-drag-sortable</h1>
+      <h2 class="project-tagline">Customizable sortable (by drag and drop) list with React</h2>
+      <a href="https://github.com/tom-s/react-drag-sortable" class="btn">View on GitHub</a>
+      <a href="https://github.com/tom-s/react-drag-sortable/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/tom-s/react-drag-sortable/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-source-shell"><pre>npm install react-drag-sortable</pre></div>
+
+<h2>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h2>
+
+<p>Make a list of elements (array) sortable by drag and drop. Allows to specify a customizable placeholder to be displayed on the drop area.
+Allows to customize the style of items at every step (normal, being dragged, placeholder).
+The component supports both horizontal and vertical lists. The component uses interact.js for crossbrowser dragging (see <a href="http://interactjs.io/">http://interactjs.io</a> for more details).
+Works with items of variables width (in %)  as well as static width.</p>
+
+<p>SUPPORTS IOS AND TOUCH GESTURES (tested on ipad and safari)</p>
+
+<h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h2>
+
+<p><a href="http://experiments.thomschell.com/react-drag-sortable/demo/dist">Here</a></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Import the component :</p>
+
+<div class="highlight highlight-source-shell"><pre>import DragSortableList from <span class="pl-s"><span class="pl-pds">'</span>react-sortable-list<span class="pl-pds">'</span></span></pre></div>
+
+<p>Use the component :</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-k">&lt;</span>DragSortableList items={list} placeholder={placeholder} onSort={onSort} dropBackTransitionDuration={0.3} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>DragSortableList items={list} onSort={onSort} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>horizontal<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span></pre></div>
+
+<p>You can pass the following properties:</p>
+
+<ul>
+<li>items: array of items to sort. Each item must be an object with a content property. You can optionally pass an array of classes that will be added to the item. For instance :</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre> var list = [
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">1&lt;</span>/div<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">2&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">3&lt;</span>/div<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">4&lt;</span>/div<span class="pl-k">&gt;</span>)}
+]<span class="pl-k">;</span></pre></div>
+
+<ul>
+<li>type: 'vertical', 'horizontal' or 'grid'</li>
+<li>moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided. </li>
+<li>dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.</li>
+<li>placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>var placeholder = (
+    <span class="pl-k">&lt;</span>div className=<span class="pl-s"><span class="pl-pds">"</span>placeholderContent<span class="pl-pds">"</span></span><span class="pl-k">&gt;</span>PLACEHOLDER<span class="pl-k">&lt;</span>/div<span class="pl-k">&gt;</span>
+)<span class="pl-k">;</span></pre></div>
+
+<ul>
+<li>callback function called on drop (when list is sorted). Takes the new sorted list as argument. For instance:</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre> var onSort = function(sortedList) {
+    console.log(<span class="pl-s"><span class="pl-pds">"</span>sortedList<span class="pl-pds">"</span></span>, sortedList)<span class="pl-k">;</span>
+ }</pre></div>
+
+<div class="highlight highlight-source-shell"><pre>ReactDOM.render(<span class="pl-k">&lt;</span>DragSortableList items={list} placeholder={placeholder} onSort={onSort} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span>, document.getElementById(<span class="pl-s"><span class="pl-pds">'</span>main<span class="pl-pds">'</span></span>))<span class="pl-k">;</span></pre></div>
+
+<h2>
+<a id="style" class="anchor" href="#style" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Style</h2>
+
+<p>The list elements all have a class .draggable
+The element being dragged has a class .dragged while it's being dragged
+The placeholder has a class .placeholder</p>
+
+<p>For instance, you can customize the style :</p>
+
+<div class="highlight highlight-source-shell"><pre>.draggable {
+    background-color: yellow<span class="pl-k">;</span>
+    margin: 10px<span class="pl-k">;</span>
+}
+
+.dragged {
+    opacity: 0.7<span class="pl-k">;</span>
+}
+
+.placeholder {
+  opacity: 0.5<span class="pl-k">;</span>
+}</pre></div>
+
+<p>You can mix your custom classes ("classes" property in items list) with these classes for powerful styling.
+You will find more complex examples of styling in the example folder.</p>
+
+<h2>
+<a id="full-example" class="anchor" href="#full-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Full example</h2>
+
+<div class="highlight highlight-source-shell"><pre>require(<span class="pl-s"><span class="pl-pds">'</span>./stylesheets/styles.scss<span class="pl-pds">'</span></span>)<span class="pl-k">;</span>
+
+import React from <span class="pl-s"><span class="pl-pds">'</span>react<span class="pl-pds">'</span></span>
+import ReactDOM from <span class="pl-s"><span class="pl-pds">'</span>react-dom<span class="pl-pds">'</span></span>
+
+// Components
+import DragSortableList from <span class="pl-s"><span class="pl-pds">'</span>../src/dragSortableList.jsx<span class="pl-pds">'</span></span>
+
+var placeholder = (
+    <span class="pl-k">&lt;</span>div className=<span class="pl-s"><span class="pl-pds">"</span>placeholderContent<span class="pl-pds">"</span></span><span class="pl-k">&gt;</span> DROP HERE <span class="pl-k">!</span> <span class="pl-k">&lt;</span>/div<span class="pl-k">&gt;</span>
+)<span class="pl-k">;</span>
+
+var list = [
+    {content: (<span class="pl-k">&lt;</span>span<span class="pl-k">&gt;</span>test<span class="pl-k">1&lt;</span>/span<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>span<span class="pl-k">&gt;</span>test<span class="pl-k">2&lt;</span>/span<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>span<span class="pl-k">&gt;</span>test<span class="pl-k">3&lt;</span>/span<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>span<span class="pl-k">&gt;</span>test<span class="pl-k">4&lt;</span>/span<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]}
+]<span class="pl-k">;</span>
+
+var listHorizontal = [
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">1&lt;</span>/div<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">2&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">3&lt;</span>/div<span class="pl-k">&gt;</span>), classes:[<span class="pl-s"><span class="pl-pds">'</span>bigger<span class="pl-pds">'</span></span>]},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">4&lt;</span>/div<span class="pl-k">&gt;</span>)}
+]<span class="pl-k">;</span>
+
+var listGrid = [
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">1&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">2&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">3&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">4&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">5&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">6&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">7&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">8&lt;</span>/div<span class="pl-k">&gt;</span>)},
+    {content: (<span class="pl-k">&lt;</span>div<span class="pl-k">&gt;</span>test<span class="pl-k">9&lt;</span>/div<span class="pl-k">&gt;</span>)}
+]<span class="pl-k">;</span>
+
+ var onSort = function(sortedList) {
+    console.log(<span class="pl-s"><span class="pl-pds">"</span>sortedList<span class="pl-pds">"</span></span>, sortedList)<span class="pl-k">;</span>
+ }
+
+ReactDOM.render(<span class="pl-k">&lt;</span>DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span>, document.getElementById(<span class="pl-s"><span class="pl-pds">'</span>example1<span class="pl-pds">'</span></span>))<span class="pl-k">;</span>
+ReactDOM.render(<span class="pl-k">&lt;</span>DragSortableList items={listHorizontal} moveTransitionDuration={0.3} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>horizontal<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span>, document.getElementById(<span class="pl-s"><span class="pl-pds">'</span>example2<span class="pl-pds">'</span></span>))<span class="pl-k">;</span>
+ReactDOM.render(<span class="pl-k">&lt;</span>DragSortableList items={listGrid} dropBackTransitionDuration={0.3} onSort={onSort} <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>grid<span class="pl-pds">"</span></span>/<span class="pl-k">&gt;</span>, document.getElementById(<span class="pl-s"><span class="pl-pds">'</span>example3<span class="pl-pds">'</span></span>))<span class="pl-k">;</span></pre></div>
+
+<p>The example (containing both vertical and horizontal lists along with more complex styling) can be found in the demo folder and run using webpack with</p>
+
+<div class="highlight highlight-source-shell"><pre>npm run dev</pre></div>
+
+<h2>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tests</h2>
+
+<p>These will be added soon. Please do not hesitate to add some !</p>
+
+<h2>
+<a id="about-the-author" class="anchor" href="#about-the-author" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About the Author</h2>
+
+<p>I am a full-stack Javascript developer based in Lyon, France.</p>
+
+<p><a href="http://www.thomschell.com">Check out my website</a></p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>react-drag-sortable is dual licensed under the MIT license and GPL.
+For more information click <a href="https://opensource.org/licenses/MIT">here</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/tom-s/react-drag-sortable">React-drag-sortable</a> is maintained by <a href="https://github.com/tom-s">tom-s</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-69967910-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
