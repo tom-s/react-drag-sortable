@@ -13,18 +13,14 @@ const config = {
         filename: '[name].bundle.js'
     },
     resolve: {
-        alias: {}
+      extensions: ['', '.js', '.jsx']
     },
     module: {
         loaders: [
             {
                 test: /\.js?$/,
                 exclude: /node_modules/,
-                loader: "babel-loader",
-                query: {
-                  plugins: ['transform-runtime'],
-                  presets: ['es2015']
-                }
+                loaders: ['react-hot', 'babel']
             },
             {
                 test: /\.scss$/,

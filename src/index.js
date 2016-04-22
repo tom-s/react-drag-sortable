@@ -45,8 +45,10 @@ class DragSortableList extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     // Store positions for animation
-    if(this.props.moveTransitionDuration) {
-      const itemsRefs = _.union(['placeholder'], _.map(this.state.items, (item) => 'item-' + item.id))
+    const { moveTransitionDuration } = this.props
+    const { items } = this.state
+    if(moveTransitionDuration) {
+      const itemsRefs = _.union(['placeholder'], items.map(item => 'item-' + item.id))
       itemsRefs.forEach(itemRef => {
         const el = this.refs[this.ref  + itemRef]
         if(el) {
@@ -60,10 +62,13 @@ class DragSortableList extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(this.props.moveTransitionDuration) {
+    const { moveTransitionDuration } = this.props
+    const { items } = this.state
+
+    if(moveTransitionDuration) {
       const placeholderEl = this.refs[this.ref  + "placeholder"]
       if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
-        const itemsRefs = _.union(['placeholder'], _.map(this.state.items, (item) => 'item-' + item.id))
+        const itemsRefs = _.union(['placeholder'], _.map(items, (item) => 'item-' + item.id))
         const instructions = {
           transitions: [],
           transforms: []
@@ -74,7 +79,7 @@ class DragSortableList extends React.Component {
             const x = _positions[itemRef].left - el.offsetLeft
             const y = _positions[itemRef].top - el.offsetTop
             el.style.webkitTransform = el.style.transform = el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)' // move back to former position
-            instructions.transitions.push(() => {el.style.WebkitTransition = el.style.transition = 'transform ' + this.props.moveTransitionDuration + 's'})
+            instructions.transitions.push(() => {el.style.WebkitTransition = el.style.transition = 'transform ' + moveTransitionDuration + 's'})
             instructions.transforms.push(() => {el.style.webkitTransform = el.style.transform = null})
           }
         })
@@ -93,24 +98,27 @@ class DragSortableList extends React.Component {
   }
 
   _initItems(props) {
-    const items = props.items.map((item, i) => {
+    const { items } = props
+    const newItems = items.map((item, i) => {
       item.rank = i
       item.id = (item.id) ? item.id : _.uniqueId()
+      return item
     })
     this.setState({
-      items
+      items: newItems
     })
   }
 
   render() {
-    let listItems = _.clone(this.state.items, true)
+    const { placeholder, dragging, items } = this.state
+    let listItems = _.clone(items, true)
     let draggedItem = null
 
     // Add drag target
-    if(this.state.placeholder) {
+    if(placeholder) {
       // Save dragged item
       listItems.forEach(item => {
-        if(this.state.dragging && item.id === this.state.dragging.id) {
+        if(dragging && item.id === dragging.id) {
           draggedItem = item // store it for display
         }
       })
@@ -118,7 +126,7 @@ class DragSortableList extends React.Component {
       // Add placeholder
       listItems.push(
         {
-          rank: this.state.placeholder.rank,
+          rank: placeholder.rank,
           placeholder: draggedItem
         }
       )
@@ -127,7 +135,7 @@ class DragSortableList extends React.Component {
       listItems = _.sortBy(listItems, (item) => item.rank)
     }
 
-    const items = listItems.map((item) => {
+    const itemsNodes = listItems.map(item => {
       if(item.placeholder) {
         return this._displayItem(item.placeholder, 'placeholder')
       } else {
@@ -138,24 +146,27 @@ class DragSortableList extends React.Component {
 
     return (
       <div id={this.ref} className="List" ref={this.ref}>
-        {items}
+        {itemsNodes}
       </div>
     )
   }
 
   _displayItem(item, type) {
-    const placeholder = (this.props.placeholder) ? this.props.placeholder : item.content
-    const key = 'item-' + item.id
+    const { type: layoutType } = this.props
+    const { id, content, classes, rank } = item
+    const { dragging } = this.state
+    const placeholder = this.props.placeholder || content
+    const key = 'item-' + id
     let style = {
       position: 'relative',
-      float: (this.props.type === 'horizontal' || this.props.type === 'grid') ? 'left' : 'none'
+      float: (layoutType === 'horizontal' || layoutType === 'grid') ? 'left' : 'none'
     }
     let classNames = 'draggable'
-    classNames += (item.classes) ? ' ' + item.classes.join(' ') : ''
+    classNames += (classes) ? ' ' + classes.join(' ') : ''
 
     if(type === 'normal') {
       return (
-         <div ref={this.ref + key} style={style} data-id={item.id} data-rank={item.rank} key={key} className={classNames}>{item.content}</div>
+         <div ref={this.ref + key} style={style} data-id={id} data-rank={rank} key={key} className={classNames}>{content}</div>
       )
     }
 
@@ -164,13 +175,13 @@ class DragSortableList extends React.Component {
       style['zIndex'] = 10 // make sur it is on top
       classNames += ' dragged'
       return (
-         <div ref={this.ref + 'dragged'} data-id={item.id} key={key} className={classNames} style={style}>{item.content}</div>
+         <div ref={this.ref + 'dragged'} data-id={id} key={key} className={classNames} style={style}>{content}</div>
       )
     }
 
     if(type === 'placeholder') {
-      style.width = this.state.dragging.width // set with and height
-      style.height = this.state.dragging.height
+      style.width = dragging.width // set with and height
+      style.height = dragging.height
       classNames += ' placeholder'
       return (
         <div ref={this.ref + 'placeholder'} key={'placeholder'} className={classNames} style={style}>
@@ -182,6 +193,7 @@ class DragSortableList extends React.Component {
 
   _dragMove(event) {
     const target = event.target;
+    const { dragging } = this.state
 
     // Move copy of dragged element and keep the dragged position in the data-x/data-y attributes
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
@@ -213,7 +225,7 @@ class DragSortableList extends React.Component {
     }
 
     // Update state if necessary and move placeholder
-    if(!this.state.dragging) {
+    if(!dragging) {
       this.setState(state, () => {
         this._movePlaceholder(event)
       })
@@ -223,15 +235,17 @@ class DragSortableList extends React.Component {
   }
 
   _dragEnd(event) {
+    const { onSort, dropBackTransitionDuration } = this.props
+    const { dragging, items: stateItems} = this.state
     const items = this._moveItem()
     let draggedEl = this.refs[this.ref + 'dragged']
 
     // Add transition if rank hasn't changed
-    const draggedBefore = _.find(this.state.items, {id: this.state.dragging.id})
-    const draggedAfter = _.find(items, {id: this.state.dragging.id})
+    const draggedBefore = _.find(stateItems, {id: dragging.id})
+    const draggedAfter = _.find(items, {id: dragging.id})
 
-    if (draggedBefore.rank === draggedAfter.rank && this.props.dropBackTransitionDuration) {
-      draggedEl.style.WebkitTransition = draggedEl.style.transition = 'all ' + this.props.dropBackTransitionDuration + 's' // no transition
+    if (draggedBefore.rank === draggedAfter.rank && dropBackTransitionDuration) {
+      draggedEl.style.WebkitTransition = draggedEl.style.transition = 'all ' + dropBackTransitionDuration + 's' // no transition
     }
 
     // Reset style
@@ -250,17 +264,18 @@ class DragSortableList extends React.Component {
       items: items
     })
 
-    if(this.props.onSort && _.isFunction(this.props.onSort)) {
-      this.props.onSort(items)
+    if(onSort && _.isFunction(onSort)) {
+      onSort(items)
     }
   }
 
   _moveItem() {
-    let items = _.clone(this.state.items, true)
+    const { items: stateItems, placeholder, dragging } = this.state
+    let items = _.clone(stateItems, true)
 
     // Replace dragged item rank
-    const dragged = _.find(items, {id: this.state.dragging.id})
-    dragged.rank = this.state.placeholder.rank
+    const dragged = _.find(items, {id: dragging.id})
+    dragged.rank = placeholder.rank
 
     items = _.sortBy(items, (item) => {
       return item.rank
@@ -278,7 +293,7 @@ class DragSortableList extends React.Component {
 
   _movePlaceholder(e) {
     const list = this.refs[this.ref]
-    const { mouseX, mouseY } = e
+    const { pageX: mouseX, pageY: mouseY } = e
     const children = _.filter(list.childNodes, (child) => {
       return !!(child.getAttribute('data-rank'))
     })
@@ -298,6 +313,7 @@ class DragSortableList extends React.Component {
   }
 
   _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
+    const { type } = this.props
     const scrollY =   window.scrollY || window.pageYOffset || document.documentElement.scrollTop
     mouseY = mouseY - scrollY // make up for bounding rect not considering scrollY
     const position = child.getBoundingClientRect()
@@ -305,18 +321,20 @@ class DragSortableList extends React.Component {
     const childY = (position.top + child.offsetHeight / 2)
     const distanceX = mouseX - childX
     const distanceY = mouseY - childY
-
-    if(this.props.type === 'grid') {
+    let difference
+    let distance
+    let rank
+    if(type === 'grid') {
       // Skip if not on the same line
       if(mouseY < position.top || mouseY > (position.top + child.offsetHeight)) {
         return placeholder
       }
-      const distance = Math.abs(distanceX)
-      const difference = distanceX
-      const rank =  parseInt(child.getAttribute('data-rank'), 10)
+      distance = Math.abs(distanceX)
+      difference = distanceX
+      rank =  parseInt(child.getAttribute('data-rank'), 10)
     } else {
-      const distance = (this.props.type === 'vertical') ? Math.abs(distanceY) : Math.abs(distanceX)
-      const difference = (this.props.type === 'vertical') ?  distanceY : distanceX
+      distance = (type === 'vertical') ? Math.abs(distanceY) : Math.abs(distanceX)
+      difference = (type === 'vertical') ?  distanceY : distanceX
     }
 
     if(!placeholder || distance < placeholder.distance) {
