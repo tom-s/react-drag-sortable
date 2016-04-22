@@ -68,7 +68,7 @@ class DragSortableList extends React.Component {
           transitions: [],
           transforms: []
         }
-        itemsRefs.forEach(itemRef) => {
+        itemsRefs.forEach(itemRef => {
           const el = this.refs[this.ref + itemRef]
           if(el) {
             const x = _positions[itemRef].left - el.offsetLeft
@@ -93,7 +93,7 @@ class DragSortableList extends React.Component {
   }
 
   _initItems(props) {
-    const items = props.items.map(item, i) => {
+    const items = props.items.map((item, i) => {
       item.rank = i
       item.id = (item.id) ? item.id : _.uniqueId()
     })
@@ -124,7 +124,7 @@ class DragSortableList extends React.Component {
       )
 
       // Sort list
-      listItems = _.sortBy(listItems, (item) => item.rank
+      listItems = _.sortBy(listItems, (item) => item.rank)
     }
 
     const items = listItems.map((item) => {

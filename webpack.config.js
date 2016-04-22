@@ -1,10 +1,10 @@
 // webpack.config.js
-var path = require('path');
-var webpack = require('webpack');
-var node_modules = path.resolve(__dirname, 'node_modules');
-var pathToReact = path.resolve(node_modules, 'react/dist/react.js');
+const path = require('path')
+const webpack = require('webpack')
+const node_modules = path.resolve(__dirname, 'node_modules')
+const pathToReact = path.resolve(node_modules, 'react/dist/react.js')
 
-var config = {
+const config = {
     entry: {
         demo: [ path.resolve(__dirname, 'demo/demo.js') ],
     },
