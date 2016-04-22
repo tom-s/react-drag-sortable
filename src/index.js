@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import interact from 'interact.js'
-import _ from 'lodash'
+import { clone, isFunction, sortBy, get, uniqueId } from 'lodash'
 
 const findDOMNode = ReactDom.findDOMNode
 
@@ -27,7 +27,7 @@ class DragSortableList extends React.Component {
       dragging: null, // dragged item (being dragged),
       items: []
     }
-    this.ref = 'List' + _.uniqueId() // generate unique ref
+    this.ref = 'List' + uniqueId() // generate unique ref
   }
 
   componentDidMount() {
@@ -67,7 +67,7 @@ class DragSortableList extends React.Component {
 
     if(moveTransitionDuration) {
       const placeholderEl = this.refs[this.ref  + "placeholder"]
-      if(placeholderEl &&_.get(prevState, 'placeholder.rank') && _.get(prevState, 'placeholder.rank') !== _.get(this.state, 'placeholder.rank')) {
+      if(placeholderEl && get(prevState, 'placeholder.rank') && get(prevState, 'placeholder.rank') !== get(this.state, 'placeholder.rank')) {
         const itemsRefs = _.union(['placeholder'], _.map(items, (item) => 'item-' + item.id))
         const instructions = {
           transitions: [],
@@ -101,7 +101,7 @@ class DragSortableList extends React.Component {
     const { items } = props
     const newItems = items.map((item, i) => {
       item.rank = i
-      item.id = (item.id) ? item.id : _.uniqueId()
+      item.id = (item.id) ? item.id : uniqueId()
       return item
     })
     this.setState({
@@ -111,7 +111,7 @@ class DragSortableList extends React.Component {
 
   render() {
     const { placeholder, dragging, items } = this.state
-    let listItems = _.clone(items, true)
+    let listItems = clone(items, true)
     let draggedItem = null
 
     // Add drag target
@@ -132,7 +132,7 @@ class DragSortableList extends React.Component {
       )
 
       // Sort list
-      listItems = _.sortBy(listItems, (item) => item.rank)
+      listItems = sortBy(listItems, (item) => item.rank)
     }
 
     const itemsNodes = listItems.map(item => {
@@ -202,7 +202,7 @@ class DragSortableList extends React.Component {
     target.setAttribute('data-y', y)
 
     // prepare future state
-    let state = _.clone(this.state, true)
+    let state = clone(this.state, true)
     const dragId =  target.getAttribute('data-id')
     state.dragging = (state.dragging) ? state.dragging : { id: dragId }
     const draggedEl = this.refs[this.ref + 'dragged']
@@ -241,8 +241,8 @@ class DragSortableList extends React.Component {
     let draggedEl = this.refs[this.ref + 'dragged']
 
     // Add transition if rank hasn't changed
-    const draggedBefore = _.find(stateItems, {id: dragging.id})
-    const draggedAfter = _.find(items, {id: dragging.id})
+    const draggedBefore = stateItems.find(item => item.id === dragging.id)
+    const draggedAfter = items.find(item => item.id === dragging.id)
 
     if (draggedBefore.rank === draggedAfter.rank && dropBackTransitionDuration) {
       draggedEl.style.WebkitTransition = draggedEl.style.transition = 'all ' + dropBackTransitionDuration + 's' // no transition
@@ -264,26 +264,26 @@ class DragSortableList extends React.Component {
       items: items
     })
 
-    if(onSort && _.isFunction(onSort)) {
+    if(onSort && isFunction(onSort)) {
       onSort(items)
     }
   }
 
   _moveItem() {
     const { items: stateItems, placeholder, dragging } = this.state
-    let items = _.clone(stateItems, true)
+    let items = clone(stateItems, true)
 
     // Replace dragged item rank
-    const dragged = _.find(items, {id: dragging.id})
+    const dragged = items.find(item => item.id === dragging.id)
     dragged.rank = placeholder.rank
 
-    items = _.sortBy(items, (item) => {
+    items = sortBy(items, (item) => {
       return item.rank
     })
 
     // Normalize items ranks
     let rank = 0
-    items = _.forEach(items, (item) => {
+    items.forEach(item => {
       item.rank = rank
       rank++
     })
@@ -294,18 +294,19 @@ class DragSortableList extends React.Component {
   _movePlaceholder(e) {
     const list = this.refs[this.ref]
     const { pageX: mouseX, pageY: mouseY } = e
-    const children = _.filter(list.childNodes, (child) => {
+    const childNodes =  [].slice.call(list.childNodes)
+    const children = childNodes.filter(child => {
       return !!(child.getAttribute('data-rank'))
     })
 
     // Find placeholder
     let placeholder = null
-    _.forEach(children, (child) => {
+    children.forEach(child => {
       placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder)
     })
 
     // Update state if necessary
-    if(placeholder && placeholder.rank !== _.get(this.state.placeholder, 'rank')) {
+    if(placeholder && placeholder.rank !== get(this.state.placeholder, 'rank')) {
       this.setState({
         placeholder: placeholder
       })
