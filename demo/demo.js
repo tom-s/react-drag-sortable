@@ -4,27 +4,27 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Components
-import DragSortableList from '../src/dragSortableList.jsx'
+import DragSortableList from '../src/index'
 
-var placeholder = (
+const placeholder = (
 	<div className="placeholderContent"> DROP HERE ! </div>
 );
 
-var list = [
+const list = [
  	{content: (<span>test1</span>), classes:['test', 'bigger']},
  	{content: (<span>test2</span>), classes:['test']},
  	{content: (<span>test3</span>), classes:['test']},
  	{content: (<span>test4</span>), classes:['test', 'bigger']}
 ];
 
-var listHorizontal = [
+const listHorizontal = [
  	{content: (<div>test1</div>), classes:['bigger']},
  	{content: (<div>test2</div>)},
  	{content: (<div>test3</div>), classes:['bigger']},
  	{content: (<div>test4</div>)}
 ];
 
-var listGrid = [
+const listGrid = [
 	{content: (<div>test1</div>)},
  	{content: (<div>test2</div>)},
  	{content: (<div>test3</div>)},
@@ -36,7 +36,7 @@ var listGrid = [
  	{content: (<div>test9</div>)}
 ];
 
- var onSort = function(sortedList) {
+ const onSort = (sortedList) => {
  	console.log("sortedList", sortedList);
  }
 

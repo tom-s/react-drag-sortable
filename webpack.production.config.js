@@ -6,10 +6,10 @@ var pathToReact = path.resolve(node_modules, 'react/dist/react.js');
 
 var config = {
     entry: {
-        demo: [ path.resolve(__dirname, 'demo/demo.jsx') ],
+        demo: [ path.resolve(__dirname, 'demo/demo.js') ],
     },
     output: {
-        path: path.resolve(__dirname, 'demo/dist'),
+        path: path.resolve(__dirname, 'demo/build'),
         filename: '[name].bundle.js'
     },
     resolve: {
@@ -18,9 +18,13 @@ var config = {
     module: {
         loaders: [
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader?stage=1&optional=runtime'
+                loader: "babel-loader",
+                query: {
+                  plugins: ['transform-runtime'],
+                  presets: ['es2015']
+                }
             },
             {
                 test: /\.scss$/,

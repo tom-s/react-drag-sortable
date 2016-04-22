@@ -6,7 +6,7 @@ var pathToReact = path.resolve(node_modules, 'react/dist/react.js');
 
 var config = {
     entry: {
-        demo: [ path.resolve(__dirname, 'demo/demo.jsx') ],
+        demo: [ path.resolve(__dirname, 'demo/demo.js') ],
     },
     output: {
         path: path.resolve(__dirname, 'demo/build'),
@@ -18,9 +18,13 @@ var config = {
     module: {
         loaders: [
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
-                loaders: ["react-hot", "babel-loader"]
+                loader: "babel-loader",
+                query: {
+                  plugins: ['transform-runtime'],
+                  presets: ['es2015']
+                }
             },
             {
                 test: /\.scss$/,
