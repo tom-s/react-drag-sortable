@@ -43,6 +43,10 @@ class DragSortableList extends React.Component {
     this._initItems(newProps)
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (!this.state.placeholder || !nextState.placeholder || this.state.placeholder.rank !== nextState.placeholder.rank)
+  }
+
   componentWillUpdate(nextProps, nextState) {
     // Store positions for animation
     const { moveTransitionDuration } = this.props
@@ -292,6 +296,7 @@ class DragSortableList extends React.Component {
   }
 
   _movePlaceholder(e) {
+    let { placeholder } = this.state
     const list = this.refs[this.ref]
     const { pageX: mouseX, pageY: mouseY } = e
     const childNodes =  [].slice.call(list.childNodes)
@@ -300,26 +305,25 @@ class DragSortableList extends React.Component {
     })
 
     // Find placeholder
-    let placeholder = null
     children.forEach(child => {
       placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder)
     })
 
     // Update state if necessary
-    if(placeholder && placeholder.rank !== get(this.state.placeholder, 'rank')) {
-      this.setState({
-        placeholder: placeholder
-      })
-    }
+    console.log("placeholder", placeholder)
+    this.setState({
+      placeholder
+    })
   }
 
   _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
     const { type } = this.props
     const scrollY =   window.scrollY || window.pageYOffset || document.documentElement.scrollTop
     mouseY = mouseY - scrollY // make up for bounding rect not considering scrollY
-    const position = child.getBoundingClientRect()
-    const childX = (position.left + child.offsetWidth / 2)
-    const childY = (position.top + child.offsetHeight / 2)
+    const { top, left } = child.getBoundingClientRect()
+    const { offsetHeight, offsetWidth } = child
+    const childX = (left + offsetWidth / 2)
+    const childY = (top + offsetHeight / 2)
     const distanceX = mouseX - childX
     const distanceY = mouseY - childY
     let difference
@@ -327,7 +331,7 @@ class DragSortableList extends React.Component {
     let rank
     if(type === 'grid') {
       // Skip if not on the same line
-      if(mouseY < position.top || mouseY > (position.top + child.offsetHeight)) {
+      if(mouseY < top || mouseY > (top + offsetHeight)) {
         return placeholder
       }
       distance = Math.abs(distanceX)
@@ -339,6 +343,8 @@ class DragSortableList extends React.Component {
     }
 
     if(!placeholder || distance < placeholder.distance) {
+    console.log("distance", distance)
+
       const pos = (difference > 0) ? 'after' : 'before'
       let rank = parseInt(child.getAttribute('data-rank'), 10)
       rank += (pos === 'before') ? -0.5 : 0.5
