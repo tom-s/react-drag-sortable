@@ -43,10 +43,6 @@ class DragSortableList extends React.Component {
     this._initItems(newProps)
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return (!this.state.placeholder || !nextState.placeholder || this.state.placeholder.rank !== nextState.placeholder.rank)
-  }
-
   componentWillUpdate(nextProps, nextState) {
     // Store positions for animation
     const { moveTransitionDuration } = this.props
@@ -305,15 +301,17 @@ class DragSortableList extends React.Component {
     })
 
     // Find placeholder
+    let newPlaceholder
     children.forEach(child => {
-      placeholder = this._calculatePlaceholder(child, mouseX, mouseY, placeholder)
+      newPlaceholder = this._calculatePlaceholder(child, mouseX, mouseY, newPlaceholder)
     })
 
     // Update state if necessary
-    console.log("placeholder", placeholder)
-    this.setState({
-      placeholder
-    })
+    if(!placeholder || newPlaceholder.rank !== placeholder.rank) {
+      this.setState({
+        placeholder: newPlaceholder
+      })
+    }
   }
 
   _calculatePlaceholder(child, mouseX, mouseY, placeholder) {
@@ -336,14 +334,12 @@ class DragSortableList extends React.Component {
       }
       distance = Math.abs(distanceX)
       difference = distanceX
-      rank =  parseInt(child.getAttribute('data-rank'), 10)
     } else {
       distance = (type === 'vertical') ? Math.abs(distanceY) : Math.abs(distanceX)
       difference = (type === 'vertical') ?  distanceY : distanceX
     }
 
     if(!placeholder || distance < placeholder.distance) {
-    console.log("distance", distance)
 
       const pos = (difference > 0) ? 'after' : 'before'
       let rank = parseInt(child.getAttribute('data-rank'), 10)
