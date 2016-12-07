@@ -25,7 +25,7 @@ SUPPORTS IOS AND TOUCH GESTURES (tested on ipad and safari)
 Import the component :
 
 ```bash
-import DragSortableList from 'react-sortable-list'
+import DragSortableList from 'react-drag-sortable'
 ```
 
 Use the component :
