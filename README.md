@@ -3,7 +3,7 @@ Sortable (by drag and drop) list React Component with auto width
 
 ## Installation
 
-```bash
+```sh
 npm install react-drag-sortable
 ```
 
@@ -24,19 +24,19 @@ SUPPORTS IOS AND TOUCH GESTURES (tested on ipad and safari)
 
 Import the component :
 
-```bash
+```js
 import DragSortableList from 'react-drag-sortable'
 ```
 
 Use the component :
-```bash
+```jsx
 <DragSortableList items={list} placeholder={placeholder} onSort={onSort} dropBackTransitionDuration={0.3} type="vertical"/>
 <DragSortableList items={list} onSort={onSort} type="horizontal"/>
 ```
 
 You can pass the following properties:
 - items: array of items to sort. Each item must be an object with a content property. You can optionally pass an array of classes that will be added to the item. For instance :
-```bash
+```jsx
  var list = [
     {content: (<div>test1</div>), classes:['bigger']},
     {content: (<div>test2</div>)},
@@ -48,18 +48,18 @@ You can pass the following properties:
 - moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided. 
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
 - placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:
-```bash
+```jsx
 var placeholder = (
     <div className="placeholderContent">PLACEHOLDER</div>
 );
 ```
 - callback function called on drop (when list is sorted). Takes the new sorted list as argument. For instance:
-```bash
+```js
  var onSort = function(sortedList) {
     console.log("sortedList", sortedList);
  }
 ```
-```bash
+```jsx
 ReactDOM.render(<DragSortableList items={list} placeholder={placeholder} onSort={onSort} type="vertical"/>, document.getElementById('main'));
 ```
 
@@ -71,7 +71,7 @@ The placeholder has a class .placeholder
 
 For instance, you can customize the style :
 
-```bash
+```css
 .draggable {
     background-color: yellow;
     margin: 10px;
@@ -90,7 +90,7 @@ You will find more complex examples of styling in the example folder.
 
 ## Full example
 
-```bash
+```jsx
 require('./stylesheets/styles.scss');
 
 import React from 'react'
@@ -139,7 +139,7 @@ ReactDOM.render(<DragSortableList items={listGrid} dropBackTransitionDuration={0
 ```
 
 The example (containing both vertical and horizontal lists along with more complex styling) can be found in the demo folder and run using webpack with
-```bash
+```sh
 npm run dev
 ```
 
