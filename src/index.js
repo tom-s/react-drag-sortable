@@ -2,7 +2,13 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import interact from 'interact.js'
-import { clone, isFunction, sortBy, get, uniqueId } from 'lodash'
+import clone from 'lodash/clone'
+import isFunction from 'lodash/isFunction'
+import sortBy from 'lodash/sortBy'
+import get from 'lodash/get'
+import uniqueId from 'lodash/uniqueId'
+import bind from 'lodash/bind'
+import union from 'lodash/union'
 
 const findDOMNode = ReactDom.findDOMNode
 
@@ -33,8 +39,8 @@ class DragSortableList extends React.Component {
   componentDidMount() {
     const draggableChildrenSelector = '#' + this.ref + '> .draggable'
     interact(draggableChildrenSelector).draggable({
-      onmove: _.bind(this._dragMove, this),
-      onend: _.bind(this._dragEnd, this)
+      onmove: bind(this._dragMove, this),
+      onend: bind(this._dragEnd, this)
     })
     this._initItems(this.props);
   }
@@ -48,7 +54,7 @@ class DragSortableList extends React.Component {
     const { moveTransitionDuration } = this.props
     const { items } = this.state
     if(moveTransitionDuration) {
-      const itemsRefs = _.union(['placeholder'], items.map(item => 'item-' + item.id))
+      const itemsRefs = union(['placeholder'], items.map(item => 'item-' + item.id))
       itemsRefs.forEach(itemRef => {
         const el = this.refs[this.ref  + itemRef]
         if(el) {
@@ -68,7 +74,7 @@ class DragSortableList extends React.Component {
     if(moveTransitionDuration) {
       const placeholderEl = this.refs[this.ref  + "placeholder"]
       if(placeholderEl && get(prevState, 'placeholder.rank') && get(prevState, 'placeholder.rank') !== get(this.state, 'placeholder.rank')) {
-        const itemsRefs = _.union(['placeholder'], _.map(items, (item) => 'item-' + item.id))
+        const itemsRefs = union(['placeholder'], items.map(item => 'item-' + item.id))
         const instructions = {
           transitions: [],
           transforms: []

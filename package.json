@@ -1,6 +1,6 @@
 {
   "name": "react-drag-sortable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React drag & drop highly customizable sortable list component",
   "main": "lib/index.js",
   "scripts": {
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "interact.js": "^1.2.6",
-    "lodash": "^3.10.0"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
