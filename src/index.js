@@ -9,6 +9,7 @@ import get from 'lodash/get'
 import uniqueId from 'lodash/uniqueId'
 import bind from 'lodash/bind'
 import union from 'lodash/union'
+import PropTypes from 'prop-types'
 
 const findDOMNode = ReactDom.findDOMNode
 
@@ -365,10 +366,10 @@ class DragSortableList extends React.Component {
 
 // Props
 DragSortableList.propTypes = {
-    items: React.PropTypes.array,
-    type: React.PropTypes.string,
-    dropBackTransitionDuration: React.PropTypes.number,
-    moveTransitionDuration: React.PropTypes.number
+    items: PropTypes.array,
+    type: PropTypes.string,
+    dropBackTransitionDuration: PropTypes.number,
+    moveTransitionDuration: PropTypes.number
 }
 DragSortableList.defaultProps = {
     items: [],
