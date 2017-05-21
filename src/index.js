@@ -1,7 +1,7 @@
 // Tools
 import React from 'react'
 import ReactDom from 'react-dom'
-import interact from 'interact.js'
+import interact from 'interactjs'
 import clone from 'lodash/clone'
 import isFunction from 'lodash/isFunction'
 import sortBy from 'lodash/sortBy'
@@ -41,7 +41,7 @@ class DragSortableList extends React.Component {
     const draggableChildrenSelector = '#' + this.ref + '> .draggable'
     interact(draggableChildrenSelector).draggable({
       onmove: bind(this._dragMove, this),
-      onend: bind(this._dragEnd, this)
+      onend: bind(this._dragEnd, this),
     })
     this._initItems(this.props);
   }

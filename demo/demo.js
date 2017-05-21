@@ -36,6 +36,13 @@ const listGrid = [
  	{content: (<div>test9</div>)}
 ]
 
+
+const listWithLinks = [
+ 	{content: (<a href='http://www.google.fr'>google</a>), classes:['test', 'bigger']},
+ 	{content: (<a href='http://www.yahoo.fr'>yahoo</a>), classes:['test']},
+ 	{content: (<a href='http://www.thomschell.com'>my website</a>), classes:['test']},
+]
+
 const onSort = (sortedList) => {
   console.log("sortedList", sortedList);
 }
@@ -43,3 +50,4 @@ const onSort = (sortedList) => {
 ReactDOM.render(<DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} type="vertical"/>, document.getElementById('example1'))
 ReactDOM.render(<DragSortableList items={listHorizontal} moveTransitionDuration={0.3} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'))
 ReactDOM.render(<DragSortableList items={listGrid} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example3'))
+ReactDOM.render(<DragSortableList items={listWithLinks} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example4'))
