@@ -18,7 +18,7 @@ SUPPORTS IOS AND TOUCH GESTURES (tested on ipad and safari)
 
 ## Demo
 
-[Here](http://experiments.thomschell.com/react-drag-sortable/demo/dist)
+[Here](http://experiments.thomschell.com/react-drag-sortable/demo/build/)
 
 ## Usage
 
@@ -45,7 +45,7 @@ You can pass the following properties:
 ];
 ```
 - type: 'vertical', 'horizontal' or 'grid'
-- moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided. 
+- moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided.
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
 - placeholder: content to display on drag target. If you don't pass a placeholder, a copy of the dragged item will be displayed. For instance:
 ```jsx
