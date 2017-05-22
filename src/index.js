@@ -313,6 +313,9 @@ class DragSortableList extends React.Component {
       newPlaceholder = this._calculatePlaceholder(child, mouseX, mouseY, newPlaceholder)
     })
 
+    if (!newPlaceholder)
+      newPlaceholder = placeholder
+
     // Update state if necessary
     if(newPlaceholder && (!placeholder || newPlaceholder.rank !== placeholder.rank)) {
       this.setState({
