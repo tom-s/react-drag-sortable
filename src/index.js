@@ -40,8 +40,12 @@ class DragSortableList extends React.Component {
   componentDidMount() {
     const draggableChildrenSelector = '#' + this.ref + '> .draggable'
     const ignoreNoDrag = fun => event => {
-      if(!event.target.classList.contains('no-drag')) {
+      const mouseElement = document.elementFromPoint(event.clientX, event.clientY)
+      if(mouseElement && !mouseElement.classList.contains('no-drag')) {
+        console.log("mouseElement", mouseElement)
         fun(event)
+      } else {
+        console.log("ignore")
       }
     }
     interact(draggableChildrenSelector).draggable({
@@ -252,11 +256,13 @@ class DragSortableList extends React.Component {
     const items = this._moveItem()
     let draggedEl = this.refs[this.ref + 'dragged']
 
+    if(!draggedEl) return
+
     // Add transition if rank hasn't changed
     const draggedBefore = stateItems.find(item => item.id === dragging.id)
     const draggedAfter = items.find(item => item.id === dragging.id)
 
-    if (draggedBefore.rank === draggedAfter.rank && dropBackTransitionDuration) {
+    if (draggedBefore && draggedAfter && draggedBefore.rank === draggedAfter.rank && dropBackTransitionDuration) {
       draggedEl.style.WebkitTransition = draggedEl.style.transition = 'all ' + dropBackTransitionDuration + 's' // no transition
     }
 
@@ -287,7 +293,7 @@ class DragSortableList extends React.Component {
 
     // Replace dragged item rank
     const dragged = items.find(item => item.id === dragging.id)
-    dragged.rank = placeholder.rank
+    if(dragged && placeholder) dragged.rank = placeholder.rank
 
     items = sortBy(items, (item) => {
       return item.rank
