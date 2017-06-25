@@ -42,10 +42,9 @@ class DragSortableList extends React.Component {
     const ignoreNoDrag = fun => event => {
       const mouseElement = document.elementFromPoint(event.clientX, event.clientY)
       if(mouseElement && !mouseElement.classList.contains('no-drag')) {
-        console.log("mouseElement", mouseElement)
         fun(event)
       } else {
-        console.log("ignore")
+        interact.stop(event)
       }
     }
     interact(draggableChildrenSelector).draggable({
