@@ -88,6 +88,20 @@ For instance, you can customize the style :
 You can mix your custom classes ("classes" property in items list) with these classes for powerful styling.
 You will find more complex examples of styling in the example folder.
 
+## no-drag
+
+You can prevent an element of being draggable by adding the class "no-drag". This examples contains a list where the texts are draggable but not the inputs.
+
+```js
+const listWithNoDrag = [
+	{content: (<div>test1<input type='text' className='no-drag'/></div>)},
+ 	{content: (<div>test2<input type='text' className='no-drag'/></div>)},
+ 	{content: (<div>test3<input type='text' className='no-drag'/></div>)},
+]
+ReactDOM.render(<DragSortableList items={listWithNoDrag} onSort={onSort}/>, document.getElementById('main'));
+```
+
+
 ## Full example
 
 ```jsx
