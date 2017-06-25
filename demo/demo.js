@@ -38,7 +38,7 @@ const listGrid = [
 
 const listWithNoDrag = [
 	{content: (<div>test1<input type='text' className='no-drag'/></div>)},
- 	{content: (<div>test2<input type='text'/></div>)},
+ 	{content: (<div>test2<input type='text' className='no-drag'/></div>)},
  	{content: (<div>test3<input type='text' className='no-drag'/></div>)},
 ]
 
@@ -55,7 +55,7 @@ const onSort = (sortedList) => {
 ReactDOM.render(<DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} type="vertical"/>, document.getElementById('example1'))
 ReactDOM.render(<DragSortableList items={listHorizontal} moveTransitionDuration={0.3} dropBackTransitionDuration={0.3} placeholder={placeholder} onSort={onSort} type="horizontal"/>, document.getElementById('example2'))
 ReactDOM.render(<DragSortableList items={listGrid} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example3'))
-ReactDOM.render(<DragSortableList items={listWithNoDrag} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example4'))
+ReactDOM.render(<DragSortableList items={listWithNoDrag} dropBackTransitionDuration={0.3} onSort={onSort}/>, document.getElementById('example4'))
 /*
 	ReactDOM.render(<DragSortableList items={listWithLinks} dropBackTransitionDuration={0.3} onSort={onSort} type="grid"/>, document.getElementById('example4'))
 */
