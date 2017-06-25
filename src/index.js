@@ -39,9 +39,14 @@ class DragSortableList extends React.Component {
 
   componentDidMount() {
     const draggableChildrenSelector = '#' + this.ref + '> .draggable'
+    const ignoreNoDrag = fun => event => {
+      if(!event.target.classList.contains('no-drag')) {
+        fun(event)
+      }
+    }
     interact(draggableChildrenSelector).draggable({
-      onmove: bind(this._dragMove, this),
-      onend: bind(this._dragEnd, this),
+      onmove: ignoreNoDrag(this._dragMove.bind(this)),
+      onend: ignoreNoDrag(this._dragEnd.bind(this)),
     })
     this._initItems(this.props);
   }
@@ -199,7 +204,7 @@ class DragSortableList extends React.Component {
   }
 
   _dragMove(event) {
-    const target = event.target;
+    const target = event.target
     const { dragging } = this.state
 
     // Move copy of dragged element and keep the dragged position in the data-x/data-y attributes
