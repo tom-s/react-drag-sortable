@@ -53,10 +53,10 @@ var placeholder = (
     <div className="placeholderContent">PLACEHOLDER</div>
 );
 ```
-- callback function called on drop (when list is sorted). Takes the new sorted list as argument. For instance:
+- callback function called on drop (when list is sorted). Takes the new sorted list and the latest drop Event as arguments. For instance:
 ```js
- var onSort = function(sortedList) {
-    console.log("sortedList", sortedList);
+ var onSort = function(sortedList, dropEvent) {
+    console.log("sortedList", sortedList, dropEvent);
  }
 ```
 ```jsx

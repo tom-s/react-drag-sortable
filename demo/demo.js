@@ -48,8 +48,8 @@ const listWithLinks = [
  	{content: (<a href='http://www.thomschell.com'>my website</a>), classes:['test']},
 ]
 
-const onSort = (sortedList) => {
-  console.log("sortedList", sortedList);
+const onSort = (sortedList, dropEvent) => {
+  console.log("sortedList", sortedList, dropEvent);
 }
 
 ReactDOM.render(<DragSortableList items={list} moveTransitionDuration={0.3} onSort={onSort} type="vertical"/>, document.getElementById('example1'))

@@ -50,7 +50,7 @@ class DragSortableList extends React.Component {
     interact(draggableChildrenSelector).draggable({
       onmove: ignoreNoDrag(this._dragMove.bind(this)),
       onend: ignoreNoDrag(this._dragEnd.bind(this)),
-    })
+    }).styleCursor(false)
     this._initItems(this.props);
   }
 
@@ -282,7 +282,7 @@ class DragSortableList extends React.Component {
     })
 
     if(onSort && isFunction(onSort)) {
-      onSort(items)
+      onSort(items, event)
     }
   }
 
