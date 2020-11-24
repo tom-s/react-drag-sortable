@@ -103,7 +103,24 @@ const listWithNoDrag = [
 ]
 ReactDOM.render(<DragSortableList items={listWithNoDrag} onSort={onSort}/>, document.getElementById('main'));
 ```
+## ignoreDragCls
+Prevent children from  dragging.
+**version:** 1.0.6
 
+Those children sometimes may from the third lib(like antd), or we can't easily code className `no-drag`.
+
+Default is `['no-drag']`, which you can use `no-drag` directly without setting and no breaking on exited 'no-drag'.
+
+```jsx
+<div className="sub-list">
+	<DragSortableList
+		type="vertical"
+		ignoreDragCls = {['no-drag', 'ant-input', 'other-class']}
+		onSort={this.onSort}
+		items={ list }
+	/>
+</div>
+```
 
 ## Full example
 
