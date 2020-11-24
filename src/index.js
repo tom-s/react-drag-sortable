@@ -39,9 +39,10 @@ class DragSortableList extends React.Component {
 
   componentDidMount() {
     const draggableChildrenSelector = '#' + this.ref + '> .draggable'
+    var ignoreDragCls = this.props.ignoreDragCls;
     const ignoreNoDrag = fun => event => {
       const mouseElement = document.elementFromPoint(event.clientX, event.clientY)
-      if(mouseElement && !mouseElement.classList.contains('no-drag') && mouseElement.parentNode && !mouseElement.parentNode.classList.contains('no-drag')) {
+      if (mouseElement && !Array.prototype.find.call(mouseElement.classList,v => ignoreDragCls.includes(v))) {
         fun(event)
       } else {
         interact.stop(event)
@@ -377,12 +378,14 @@ class DragSortableList extends React.Component {
 // Props
 DragSortableList.propTypes = {
     items: PropTypes.array,
+    ignoreDragCls: PropTypes.array,
     type: PropTypes.string,
     dropBackTransitionDuration: PropTypes.number,
     moveTransitionDuration: PropTypes.number
 }
 DragSortableList.defaultProps = {
     items: [],
+    ignoreDragCls: ['no-drag'],
     type: 'vertical', //horizontal
     dropBackTransitionDuration: null
 }
