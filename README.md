@@ -41,12 +41,13 @@ You can pass the following properties:
 - items: array of items to sort. Each item must be an object with a content property. You can optionally pass an array of classes that will be added to the item. For instance :
 ```jsx
  var list = [
-    {content: (<div>test1</div>), classes:['bigger']},
-    {content: (<div>test2</div>)},
-    {content: (<div>test3</div>), classes:['bigger']},
-    {content: (<div>test4</div>)}
+    {id: item-1, content: (<div>test1</div>), classes:['bigger']},
+    {id: item-2, content: (<div>test2</div>)},
+    {id: item-3, content: (<div>test3</div>), classes:['bigger']},
+    {id: item-4, content: (<div>test4</div>)}
 ];
 ```
+- id: uniq key (item-uniqID) ('item-' word is important) for correctly work with input, else you will lose focus on change text in field.
 - type: 'vertical', 'horizontal' or 'grid'
 - moveTransitionDuration (number): if a duration is provided, items will animate when they move on drag. The CSS animation's duration is the number provided.
 - dropBackTransitionDuration (number): if a duration is provided, the dragged item will go back to its original position when not dropped on a different target. The CSS animation's duration is the number provided.
